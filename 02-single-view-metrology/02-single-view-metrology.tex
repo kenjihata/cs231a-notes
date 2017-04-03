@@ -99,7 +99,6 @@ Notice that the last element of $p'$ may become non-zero, which suggests that a 
 \begin{equation}
 p' =Hp_\infty = \begin{bmatrix} A &t \\ 0&1 \end{bmatrix}\begin{bmatrix}1\\1\\0\end{bmatrix} = \begin{bmatrix}p'_x\\ p'_y\\0\end{bmatrix}
 \end{equation}
-% This means that ...
 
 Now let's apply a projective transformation $H$ to a line $\ell$ to get a new line $\ell'$. All points $x$ that pass through a line must satisfy the property $x^T\ell = 0$. In the transformed space, we know that lines still map to lines, which means that $x'\ell' = 0$. We can use the identity property to get \[x^TI\ell = x^TH^T H^{-T} \ell = 0\]If we apply a projective transformation to the line, then all the points become transformed as well, giving $x' = Hx'$. Thus we get $x^TH^T H^{-T} \ell = x'^T\ell'$, and we find the projective transformation of a line is $\ell' = H^{-T}\ell$. Similar to our observations with points at infinity, we find that the projective transformation of a line at infinity does not necessarily map to another line at infinity. Additionally, affine transformations still map lines at infinity to lines at infinity.
 
@@ -191,7 +190,7 @@ What if we are able to find another vanishing $v_3$ for another mutually orthogo
     \omega = \begin{bmatrix}\omega_1 & 0 & \omega_4 \\ 0 & \omega_1 & \omega_5 \\ \omega_4 & \omega_5 &\omega_6 \end{bmatrix}
 \end{equation}
 
-If you noticed carefully, there are four variables in the definition of $\omega$. However, we can only know $\omega$ up to scale, which reduces the amount of actual variables to three, allowing it to be solved. Once we have $\omega$, then we can use Cholesky factorization described on page 582 of the Hartley and Zisserman textbook to compute $K$. Thus, we have managed to calibrate the camera using a single image!
+If you noticed carefully, there are four variables in the definition of $\omega$. However, we can only know $\omega$ up to scale, which reduces the amount of actual variables to three, allowing it to be solved. Once we have $\omega$, then we can use Cholesky decomposition to compute $K$. Thus, we have managed to calibrate the camera using a single image!
 
 Once $K$ is known, then we can reconstruct the 3D geometry of the scene. For example, we can compute the orientation of all the planes identified above. Therefore, a single image can be readily used to uncover a wealth of information about the scene it captures.
 
