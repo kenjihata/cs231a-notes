@@ -45,11 +45,11 @@ Often in multiple view geometry, there are interesting relationships between the
 \caption{An example of epipolar lines and their corresponding points drawn on an image pair.}
 \label{fig:epipolar_example}
 \end{figure}
-As illustrated in Figure~\ref{fig:epipolar}, the standard epipolar geometry setup involves two cameras observing the same 3D point $P$, whose projection in each of the image planes is located at $p$ and $p'$ respectively. The camera centers are located at $O_1$ and $O_2$, and the line between them is referred to as the \emph{baseline}. We call the plane defined by the two camera centers and $P$ to be the \emph{epipolar plane}. The locations of where the baseline intersects the two image planes are known as the the \emph{epipoles} $e$ and $e'$. Finally, the lines defined by the intersection of the epipolar plane and the two image planes are known as the \emph{epipolar lines}. The epipolar lines have the property that they intersect the baseline at the respective epipoles in the image  plane.
+As illustrated in Figure~\ref{fig:epipolar}, the standard epipolar geometry setup involves two cameras observing the same 3D point $P$, whose projection in each of the image planes is located at $p$ and $p'$ respectively. The camera centers are located at $O_1$ and $O_2$, and the line between them is referred to as the \emph{baseline}. We call the plane defined by the two camera centers and $P$ the \emph{epipolar plane}. The locations of where the baseline intersects the two image planes are known as the the \emph{epipoles} $e$ and $e'$. Finally, the lines defined by the intersection of the epipolar plane and the two image planes are known as the \emph{epipolar lines}. The epipolar lines have the property that they intersect the baseline at the respective epipoles in the image  plane.
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/epipolar.png}
+\includegraphics[width=0.8\textwidth]{figures/epipolar_parallel.png}
 \caption{When the two image planes are parallel, then the epipoles $e$ and $e'$ are located at infinity. Notice that the epipolar lines are parallel to the $u$ axis of each image plane.}
 \label{fig:epipolar_parallel}
 \end{figure}
