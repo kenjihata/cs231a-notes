@@ -181,3 +181,6 @@ TSWLatexianTemp*
 
 # PDF
 *.pdf
+
+# VIM Swap
+*.swp

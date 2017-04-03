@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage[]{amsfonts}
 \usepackage[]{graphicx}
+\usepackage[]{amsthm}
 
 \title{CS231A Lecture Notes 2: Single View Metrology}
 \author{Silvio Savarese and Kenji Hata}
@@ -22,46 +23,51 @@ In the previous lecture notes, we discussed how we can transform points from the
 \section{Transformations in 2D}
 To better understand how we can learn from images, we should be able to first know about the various transformations in 2D space. 
 
-\emph{Isometries} are transformations that preserve distances. In its most basic form, an isometry can be described as a rotation and translation. Therefore, mathematically, they are defined as
+\emph{Isometric transformations} are transformations that preserve distances. In its most basic form, an isometry can be described as a rotation $R$  and translation $t$. Therefore, mathematically, they are defined as
 \begin{equation*}
     \begin{bmatrix}x'\\y'\\1\end{bmatrix} = \begin{bmatrix}R & t\\ 0 & 1\end{bmatrix}\begin{bmatrix}x\\y\\1\end{bmatrix}
 \end{equation*}
 where $\begin{bmatrix}x'&y'&1\end{bmatrix}^T$ is the point achieved after the isometric transformation. 
 
-\emph{Similarities} are transformations that preserve shape. Intuitively, they can do everything that isometric transformations can plus scaling. Mathematically, they are denoted as 
+\emph{Similarity transformations} are transformations that preserve shape. Intuitively, they can do everything that isometric transformations can plus scaling. Mathematically, they are denoted as 
 \begin{equation*}
     \begin{bmatrix}x'\\y'\\1\end{bmatrix} = \begin{bmatrix}SR & t\\ 0 & 1\end{bmatrix}\begin{bmatrix}x\\y\\1\end{bmatrix},\ S = \begin{bmatrix}s & 0\\ 0 & s\end{bmatrix}
 \end{equation*}
 Since they preserve shapes, they also preserve ratio of lengths and angles. Note that every isometric transformation is a specific form of a similarity transformation when $s=1$. The converse does not hold true however.
 
-\emph{Affinities} are transformations that preserve points, straight lines, and parallelism. For some vector $v$, they are defined as 
+\emph{Affine transformations} are transformations that preserve points, straight lines, and parallelism. For some vector $v$, an affine transformation $T$ is defined as 
 \begin{equation*}
-    A(v) = Mv + b
+    T(v) = Av + t
 \end{equation*}
-In homogenous coordinates, affine transformations are often written as
+where $A$ is a linear transformation of $\mathbb{R}^n$. In homogenous coordinates, affine transformations are often written as
 \begin{equation*}
     \begin{bmatrix}x'\\y'\\1\end{bmatrix} = \begin{bmatrix}A & t\\ 0 & 1\end{bmatrix}\begin{bmatrix}x\\y\\1\end{bmatrix}
 \end{equation*}
 From the above equation, it is easy to see that all similarities (and thus isometries) are a specific case of affinities.
 
-\emph{Projective transformations} are any transformations that maps lines to lines, but does not necessarily preserve parallelism. Any projective transformation can be represented as an invertible $3\times 3$ matrix in homogenous coordinates; conversely, any invertible $3\times 3$ matrix defines a projective transformation.
+\emph{Projective transformations} or \emph{homographies} are any transformations that maps lines to lines, but does not necessarily preserve parallelism. In homogenous coordinates, projective transformations are represented as
 \begin{equation*}
     \begin{bmatrix}x'\\y'\\1\end{bmatrix} = \begin{bmatrix}A & t\\ v & b\end{bmatrix}\begin{bmatrix}x\\y\\1\end{bmatrix}
 \end{equation*}
-Projective transformations preserve collinearity of points and the cross ratio of four collinear points. The cross ratio takes four points $P_1, P_2, P_3, P_4$ on a line and computes
+We see that the form is a further generalization of affine transformations, as extra degrees of freedom are added with the addition of $v$. 
+
+Despite not preserving parallelism, projective transformations does preserve collinearity of points, as it maps lines to lines. Furthermore, we prove that the cross ratio of four collinear points remains invariant under projective transformations. The cross ratio takes four points $P_1, P_2, P_3, P_4$ on a line and computes
 \begin{equation}
     \mathrm{cross\ ratio} = \frac{\|P_3-P_1\|\|P_4-P_2\|}{\|P_3-P_2\|\|P_4-P_1\|}
 \end{equation}
+We leave proving the invariance of the cross ratio under projective transformation as a class exercise.
 
 \section{Points and Lines at Infinity}
-Lines are important for determining structure in images, so knowing their definitions in both 2D and 3D is essential. A line in 2D can be represented with the homogenous vector $\ell = \begin{bmatrix}a & b & c \end{bmatrix}^T$. The ratio $-\frac{a}{b}$ captures the slope of the line and the ratio $-\frac{b}{c}$ captures the y-intercept. Formally, 2D lines are defined by the equation:
+Lines are important for determining structure in images, so knowing their definitions in both 2D and 3D is essential. A line in 2D can be represented with the homogenous vector $\ell = \begin{bmatrix}a & b & c \end{bmatrix}^T$. The ratio $-\frac{a}{b}$ captures the slope of the line and the ratio $-\frac{b}{c}$ captures the y-intercept. Formally, 2D lines are defined by:
 \begin{equation}
-\forall p = \begin{bmatrix}x\\y\end{bmatrix} \in \ell,\ \  \begin{bmatrix}x\\y\\1\end{bmatrix}^T\begin{bmatrix}a \\ b \\ c\end{bmatrix} = 0
+\forall p = \begin{bmatrix}x\\y\end{bmatrix} \in \ell,\ \  \begin{bmatrix}a & b & c\end{bmatrix}\begin{bmatrix}x\\y\\1\end{bmatrix} = 0
 \end{equation}
 
-In general, two lines $\ell$ and $\ell'$ will intersect at a point $x$. This point is defined as the cross product between $\ell$ and $\ell'$. We shall prove this below.
+In general, two lines $\ell$ and $\ell'$ will intersect at a point $x$. This point is defined as the cross product between $\ell$ and $\ell'$.
 
-\textbf{Proof:} Given two intersecting lines $\ell$ and $\ell'$, the intersection point $x$ should lie on both lines $\ell$ and $\ell'$. Therefore, $x^T \ell = 0$ and $x^T\ell' = 0$. If we set $x = \ell \times \ell'$, then by definition of cross product, the vector $x$ is orthogonal to both vectors $\ell$ and $\ell'$. By the definition of orthogonality, $x^T \ell = 0$ and $x^T\ell' = 0$. Thus, this definition of $x$ satisfies the constraints. 
+\begin{proof} 
+    Given two intersecting lines $\ell$ and $\ell'$, the intersection point $x$ should lie on both lines $\ell$ and $\ell'$. Therefore, $x^T \ell = 0$ and $x^T\ell' = 0$. If we set $x = \ell \times \ell'$, then by definition of cross product, the vector $x$ is orthogonal to both vectors $\ell$ and $\ell'$. By the definition of orthogonality, $x^T \ell = 0$ and $x^T\ell' = 0$. Thus, this definition of $x$ satisfies the constraints. 
+\end{proof}
 
 What about the case of parallel lines? Everyday knowledge expects these lines to never intersect. However, this definition could be rewritten to say that these lines intersect at infinity. In homogenous coordinates, a point at infinity is written as $\begin{bmatrix}x & y & 0\end{bmatrix}^T$. Recall the Euclidean coordinates are gathered by dividing all coordinates by the last coordinate. In this case, the coordinate is zero, achieving a point at infinity. Therefore, homogenous coordinates give a good formulation of determining intersections, even in cases of parallel lines.
 
@@ -77,7 +83,7 @@ Thus, we confirmed our intuition that two parallel lines intersect at infinity. 
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/line_infinity.png}
+\includegraphics[width=0.5\textwidth]{figures/line_infinity.png}
 \caption{Points at infinity form lines at infinity.}
 \label{fig:line_infinity}
 \end{figure}
@@ -86,7 +92,7 @@ The concept of points of infinity can be extended to define \emph{lines at infin
 
 If we apply a generic projective transformation $H$ to a point at infinity $p_\infty$, what will happen? 
 \begin{equation}
-p' =Hp_\infty = \begin{bmatrix} A &t \\ v&B \end{bmatrix}\begin{bmatrix}1\\1\\0\end{bmatrix} = \begin{bmatrix}p'_x\\ p'_y\\p'_z\end{bmatrix}
+p' =Hp_\infty = \begin{bmatrix} A &t \\ v&b \end{bmatrix}\begin{bmatrix}1\\1\\0\end{bmatrix} = \begin{bmatrix}p'_x\\ p'_y\\p'_z\end{bmatrix}
 \end{equation}
 
 Notice that the last element of $p'$ may become non-zero, which suggests that a projective transformation generally maps points at infinity to points that are no longer at infinity. However, this is not the case for affine transformations, which map points at infinity to points at infinity:
@@ -98,21 +104,21 @@ p' =Hp_\infty = \begin{bmatrix} A &t \\ 0&1 \end{bmatrix}\begin{bmatrix}1\\1\\0\
 Now let's apply a projective transformation $H$ to a line $\ell$ to get a new line $\ell'$. All points $x$ that pass through a line must satisfy the property $x^T\ell = 0$. In the transformed space, we know that lines still map to lines, which means that $x'\ell' = 0$. We can use the identity property to get \[x^TI\ell = x^TH^T H^{-T} \ell = 0\]If we apply a projective transformation to the line, then all the points become transformed as well, giving $x' = Hx'$. Thus we get $x^TH^T H^{-T} \ell = x'^T\ell'$, and we find the projective transformation of a line is $\ell' = H^{-T}\ell$. Similar to our observations with points at infinity, we find that the projective transformation of a line at infinity does not necessarily map to another line at infinity. Additionally, affine transformations still map lines at infinity to lines at infinity.
 
 \section{Vanishing Points and Lines}
-So far, we have introduced the concepts of lines and points at infinity in 2D. Let us know introduce the equivalent concepts in 3D, in the corresponding homogenous coordinates. 
+So far, we have introduced the concepts of lines and points at infinity in 2D. Let us now introduce the equivalent concepts for 3D in its corresponding homogenous coordinates. 
 
 In the 3D world, we are now introduced to the concepts of planes. We can represent a plane as a vector $\begin{bmatrix}a&b&c&d\end{bmatrix} ^T$, where $(a,b,c)$ form a normal vector and $d$ is the distance from the origin to the plane in that normal vector's direction. Formally, a plane is defined as all the points $x$ which satisfy
 \begin{equation}
 x^T\begin{bmatrix}a\\b\\c\\d\end{bmatrix} = ax_1 + bx_2 + cx_3 + d = 0
 \end{equation}
-Lines in 3D are defined as the intersection of two planes. Since they have four degrees of freedom (a defined intercept location and slopes in each of the three dimensions), they are difficult to represent in 3D space. Please see section 3.2.2 of the Hartley and Zisserman textbook for more details.
+Lines in 3D are defined as the intersection of two planes. Since they have four degrees of freedom (a defined intercept location and slopes in each of the three dimensions), they are difficult to represent nicely in 3D space. Please see Section 3.2.2 of the Hartley \& Zisserman textbook for more details.
 
-Points, however, are defined similarly in 3D as they are in 2D. Points at infinity in 3D are again defined as the intersection point of parallel lines in 3D. Furthermore, if we apply a projective transformation to one of these points at infinity $x_\infty$, then we obtain a point $p_\infty$ in the image plane, which is no longer at infinity. This point $p_\infty$ is known as a \emph{vanishing point}. What can we do with these vanishing points?
+Points, however, are defined similarly in 3D as they are in 2D. Points at infinity in 3D are again defined as the intersection point of parallel lines in 3D. Furthermore, if we apply a projective transformation to one of these points at infinity $x_\infty$, then we obtain a point $p_\infty$ in the image plane, which is no longer at infinity in homogeneous coordinates. This point $p_\infty$ is known as a \emph{vanishing point}. But, what can we do with vanishing points?
 
-We can derive a useful relationship between parallel lines in 3D, their corresponding vanishing point in the image, and the camera parameters $K,R,T$. Let us define $d = (a,b,c)$ as the direction of a set of 3D parallel lines in the camera reference system. These lines intersect to a point at infinity and the projection of such a point in the image returns the vanishing point $v$.
+We can derive a useful relationship between parallel lines in 3D, their corresponding vanishing point in the image, and the camera parameters $K,R,T$. Let us define $d = (a,b,c)$ as the direction of a set of 3D parallel lines in the camera reference system. These lines intersect to a point at infinity and the projection of such a point in the image returns the vanishing point $v$, which is defined by
 \begin{equation}
 v = Kd
 \end{equation}
-We leave the derivation of the above equation as an exercise. This equation can be rewritten to derive the direction $d$: 
+We leave the derivation of the above equation as an exercise. This equation can be rewritten to extract the direction $d$: 
 \begin{equation}
 d = \frac{K^{-1}v}{\|K^{-1}v\|}
 \end{equation}
@@ -152,12 +158,17 @@ Before introducing the last property that relates vanishing points and lines, we
 \label{fig:angles}
 \end{figure}
 
-The last property we introduce relates the direction of lines in 3D with the corresponding vanishing points in the image plane. Suppose that two pairs of parallel lines have directions $d_1$ and $d_2$, and are associated with the points at infinity $x_{1,\infty}$ and $x_{2,\infty}$. Let $v_1$ and $v_2$ be the corresponding vanishing points. Then, we find that the angle $\theta$ between $d_1$ and $d_2$ is given by the equation
+The last property we introduce relates lines and planes in 3D with the corresponding vanishing points and lines in the image plane. Suppose that two pairs of parallel lines in 3D have directions $d_1$ and $d_2$, and are associated with the points at infinity $x_{1,\infty}$ and $x_{2,\infty}$. Let $v_1$ and $v_2$ be the corresponding vanishing points. Then, we find that the angle $\theta$ between $d_1$ and $d_2$ is given by the equation
 \begin{equation}
 \cos\theta = \frac{v_1^T\omega v_2}{\sqrt{v_1 \omega v_1}\sqrt{v_2 \omega v_2}}
 \label{eq:angles}
 \end{equation}
 where $\omega = (KK^T)^{-1}$. 
+
+We can extend this idea further to the 3D planar case, in which we want to relate different planes in 3D. Recall that for any plane, we can compute its associated vanishing line $\ell_\mathrm{{horiz}}$ and its normal $K^T \ell_{\mathrm{horiz}}$. Therefore, we can compute the angle between two planes with vanishing lines $\ell_1$ and $\ell_2$:
+\begin{equation}
+    \cos\theta = \frac{\ell_1^T\omega^{-1} \ell_2}{\sqrt{\ell_1 \omega^{-1} \ell_1}\sqrt{\ell_2 \omega^{-1} \ell_2}}
+\end{equation}
 
 \section{A Single View Metrology Example}
 \begin{figure}[h!]
@@ -173,7 +184,7 @@ But recall that $\omega$ depends on the camera matrix $K$, which is potentially 
 \centering
 \includegraphics[width=0.8\textwidth]{figures/example2.png}
 \caption{The example setup with three vanishing points for a set of mutually perpendicular planes.}
-\label{fig:example1}
+\label{fig:example2}
 \end{figure}
 What if we are able to find another vanishing $v_3$ for another mutually orthogonal plane? Then we know that $v_1\omega v_2 = v_1\omega v_3 = v_2\omega v_3 = 0$. Since each pair gives a constraint, we only end up with 3 out of the 5 constraints needed to compute $K$. However, if we make the assumption that the camera has zero-skew and square pixels, then we can add the additional two constraints needed. By these assumptions, then we know that $\omega$ takes on the form 
 \begin{equation}
