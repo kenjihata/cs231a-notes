@@ -160,7 +160,7 @@ K = \begin{bmatrix}x'\\y'\\ z\end{bmatrix}=\begin{bmatrix}
 \end{equation}
 Most methods that we introduce in this class ignore distortion effects. Therefore, our final camera matrix has 5 degrees of freedom: 2 for focal length, 2 for offset, and 1 for skewness. 
 
-So far, we have described a mapping between a point $P$ in the 3D camera reference system to a point $P'$ in the 2D image plane. But what if the information about the 3D world is available in a different coordinate system? Then, we need to include an additional transformation that relates points from the world reference system to the camera reference system. This transformation is captured by a rotation matrix $R$ and translation vector $v$. Therefore, given a point in a world reference system $P_w$, we can compute its camera coordinates as follows:
+So far, we have described a mapping between a point $P$ in the 3D camera reference system to a point $P'$ in the 2D image plane. But what if the information about the 3D world is available in a different coordinate system? Then, we need to include an additional transformation that relates points from the world reference system to the camera reference system. This transformation is captured by a rotation matrix $R$ and translation vector $T$. Therefore, given a point in a world reference system $P_w$, we can compute its camera coordinates as follows:
 \begin{equation}
 P = \begin{bmatrix}R&T\\0&1\end{bmatrix} P_w
 \end{equation}
