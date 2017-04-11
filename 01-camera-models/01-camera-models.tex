@@ -144,11 +144,12 @@ From this point on, assume that we will work in homogenous coordinates, unless s
 \end{equation}
 We can decompose this transformation a bit further into 
 \begin{equation}
-P = MP = \begin{bmatrix}
+P' = MP = \begin{bmatrix}
     \alpha & 0 & c_x \\
     0 & \beta & c_y  \\ 
     0 & 0 & 1 
-    \end{bmatrix}\begin{bmatrix}I & 0\end{bmatrix}= K\begin{bmatrix}I & 0\end{bmatrix}
+    \end{bmatrix}\begin{bmatrix}I & 0\end{bmatrix}P = K\begin{bmatrix}I & 0\end{bmatrix}P
+    \label{eq:decomposedHomogenousTransform}
 \end{equation}
 The matrix $K$ is often referred to as the \emph{camera matrix}. This matrix contains some of the critical parameters that are useful to characterize a camera model. Two parameters are currently missing from our formulation: \emph{skewness} and \emph{distortion}. We often say that an image is skewed when the camera coordinate system is skewed. In this case, the angle between the two axes are slightly larger or smaller than 90 degrees. Most cameras have zero-skew, but some degree of skewness may occur because of sensor manufacturing errors. Deriving the new camera matrix accounting for skewness is outside the scope of this class and we give it to you below:
 \begin{equation}
@@ -164,7 +165,7 @@ So far, we have described a mapping between a point $P$ in the 3D camera referen
 \begin{equation}
 P = \begin{bmatrix}R&T\\0&1\end{bmatrix} P_w
 \end{equation}
-Substituting this in gives
+Substituting this in equation (\ref{eq:decomposedHomogenousTransform}) and simplifying gives
 \begin{equation}
 P' = K\begin{bmatrix}R&T\end{bmatrix}P_w = MP_w
 \label{eq:cameramatrix}
