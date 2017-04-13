@@ -143,11 +143,12 @@ From this point on, assume that we will work in homogenous coordinates, unless s
 \end{equation}
 We can decompose this transformation a bit further into 
 \begin{equation}
-P = MP = \begin{bmatrix}
+P' = MP = \begin{bmatrix}
     \alpha & 0 & c_x \\
     0 & \beta & c_y  \\ 
     0 & 0 & 1 
-    \end{bmatrix}\begin{bmatrix}I & 0\end{bmatrix}= K\begin{bmatrix}I & 0\end{bmatrix}
+    \end{bmatrix}\begin{bmatrix}I & 0\end{bmatrix}P = K\begin{bmatrix}I & 0\end{bmatrix}P
+    \label{eq:decomposedHomogenousTransform}
 \end{equation}
 The matrix $K$ is often referred to as the \emph{camera matrix}. This matrix contains some of the critical parameters that are useful to characterize a camera model. Two parameters are currently missing from our formulation: \emph{skewness} and \emph{distortion}. We often say that an image is skewed when the camera coordinate system is skewed. In this case, the angle between the two axes are slightly larger or smaller than 90 degrees. Most cameras have zero-skew, but some degree of skewness may occur because of sensor manufacturing errors. Deriving the new camera matrix accounting for skewness is outside the scope of this class and we give it to you below:
 \begin{equation}
@@ -159,11 +160,11 @@ K = \begin{bmatrix}x'\\y'\\ z\end{bmatrix}=\begin{bmatrix}
 \end{equation}
 Most methods that we introduce in this class ignore distortion effects. Therefore, our final camera matrix has 5 degrees of freedom: 2 for focal length, 2 for offset, and 1 for skewness. 
 
-So far, we have described a mapping between a point $P$ in the 3D camera reference system to a point $P'$ in the 2D image plane. But what if the information about the 3D world is available in a different coordinate system? Then, we need to include an additional transformation that relates points from the world reference system to the camera reference system. This transformation is captured by a rotation matrix $R$ and translation vector $v$. Therefore, given a point in a world reference system $P_w$, we can compute its camera coordinates as follows:
+So far, we have described a mapping between a point $P$ in the 3D camera reference system to a point $P'$ in the 2D image plane. But what if the information about the 3D world is available in a different coordinate system? Then, we need to include an additional transformation that relates points from the world reference system to the camera reference system. This transformation is captured by a rotation matrix $R$ and translation vector $T$. Therefore, given a point in a world reference system $P_w$, we can compute its camera coordinates as follows:
 \begin{equation}
 P = \begin{bmatrix}R&T\\0&1\end{bmatrix} P_w
 \end{equation}
-Substituting this in gives
+Substituting this in equation (\ref{eq:decomposedHomogenousTransform}) and simplifying gives
 \begin{equation}
 P' = K\begin{bmatrix}R&T\end{bmatrix}P_w = MP_w
 \label{eq:cameramatrix}
@@ -261,8 +262,8 @@ Solving for the intrinsics gives
 The extrinsics are 
 \begin{equation}\begin{aligned}
     r_1 &= \frac{a_2\times a_3}{\|a_2\times a_3\|}\\
-    r_2 &= \pm \frac{ a_3}{\| a_3\|}\\
-    r_3 &= r_3\times r_1\\
+    r_2 &= r_3\times r_1\\
+    r_3 &= \pm \frac{ a_3}{\| a_3\|}\\
     T &= \rho K^-1 b
 \end{aligned}\end{equation}
 We leave the derivations as a class exercise or you can refer to Section 1.3.1 of the Forsyth \& Ponce textbook.
