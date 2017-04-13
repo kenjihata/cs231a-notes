@@ -176,7 +176,7 @@ We can extend this idea further to the 3D planar case, in which we want to relat
 \caption{The example setup with two vanishing points for a pair of perpendicular planes.}
 \label{fig:example1}
 \end{figure}
-Suppose that we can identify two planes in an image of the 3D world. Additionally, let's suppose that we can identify a pair of parallel lines on each of these planes. This allows us to estimate two vanishing points $v_1$ and $v_2$ in the image. Finally, let's suppose that we know that these planes are perpendicular in 3D. In this case we know that from Equation~\ref{eq:angles}, that $v_1\omega v_2 = 0$. 
+Suppose that we can identify two planes in an image of the 3D world. Additionally, let's suppose that we can identify a pair of parallel lines on each of these planes. This allows us to estimate two vanishing points $v_1$ and $v_2$ in the image. Finally, let's suppose that we know that these planes are perpendicular in 3D. In this case, we know that from Equation~\ref{eq:angles}, that $v_1\omega v_2 = 0$. 
 
 But recall that $\omega$ depends on the camera matrix $K$, which is potentially unknown at this time. Therefore, is knowing these two vanishing points sufficient for accurately estimating the camera parameters? Considering that $K$ has 5 degrees of freedom and that $v_1 \omega v_2 = 0$ provides only one constraint, we do not have enough information to calculate $K$. 
 \begin{figure}[h!]

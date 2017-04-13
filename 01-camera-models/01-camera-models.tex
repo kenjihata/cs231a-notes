@@ -191,7 +191,7 @@ p_i = \begin{bmatrix}u_i\\v_i\end{bmatrix} = MP_i = \begin{bmatrix}\frac{m_1 P_i
 
 As we see from the above equation, each correspondence gives us two equations and, consequently, two constraints for solving the unknown parameters contained in $m$. From before, we know that the camera matrix has $11$ unknown parameters. This means that we need at least $6$ correspondences to solve this. However, in the real world, we often use more, as our measurements are often noisy. To explicitly see this, we can derive a pair of equations that relate $u_i$ and $v_i$ with $P_i$. 
 \begin{align*}
-u_i(m_3P_i) - m_1P_i = 0
+u_i(m_3P_i) - m_1P_i = 0\\
 v_i(m_3P_i) - m_2P_i = 0
 \end{align*}
 
