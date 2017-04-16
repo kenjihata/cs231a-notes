@@ -9,7 +9,6 @@
 \author{Silvio Savarese and Kenji Hata}
 \date{}
 
-
 \renewcommand\emph{\textbf}
 
 \begin{document}
@@ -192,8 +191,8 @@ p_i = \begin{bmatrix}u_i\\v_i\end{bmatrix} = MP_i = \begin{bmatrix}\frac{m_1 P_i
 
 As we see from the above equation, each correspondence gives us two equations and, consequently, two constraints for solving the unknown parameters contained in $m$. From before, we know that the camera matrix has $11$ unknown parameters. This means that we need at least $6$ correspondences to solve this. However, in the real world, we often use more, as our measurements are often noisy. To explicitly see this, we can derive a pair of equations that relate $u_i$ and $v_i$ with $P_i$. 
 \begin{align*}
-u_i(m_3P_i) - m_1P_i &= 0\\
-v_i(m_3P_i) - m_2P_i &= 0
+u_i(m_3P_i) - m_1P_i = 0\\
+v_i(m_3P_i) - m_2P_i = 0
 \end{align*}
 
 Given $n$ of these corresponding points, the entire linear system of equations becomes
@@ -272,7 +271,9 @@ We leave the derivations as a class exercise or you can refer to Section 1.3.1 o
 With the calibration procedure complete, we warn against degenerate cases. Not all sets of $n$ correspondences will work. For example, if the points $P_i$ lie on the same plane, then the system will not be able to be solved. These unsolvable configurations of points are known as \emph{degenerate configurations}. More generally, degenerate configurations have points that lie on the intersection curve of two quadric surfaces. Although this outside the scope of the class, you can find more information in Section 1.3 of the Forsyth \& Ponce textbook. 
 
 \section{Handling Distortion in Camera Calibration}
-So far, we have been working with ideal lenses which are free from any distortion. However, as seen before, real lenses can deviate from rectilinear projection, which require more advanced methods. This section provides just a brief introduction to handling distortions. Often, the distortions are often radially symmetric because of the physical symmetry of the lens. We model the radial distortion with an isotropic transformation:
+So far, we have been working with ideal lenses which are free from any distortion. However, as seen before, real lenses can deviate from rectilinear projection, which require more advanced methods. This section provides just a brief introduction to handling distortions. 
+
+Often, distortions are radially symmetric because of the physical symmetry of the lens. We model the radial distortion with an isotropic transformation:
 \begin{equation}
     QP_i = \begin{bmatrix}
     \frac{1}{\lambda}&0&0\\0 &    \frac{1}{\lambda} & 0 \\ 0 & 0 &1\end{bmatrix} M P_i = \begin{bmatrix}
