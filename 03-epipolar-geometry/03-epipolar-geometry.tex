@@ -244,11 +244,11 @@ The first step in achieving such a transformation is to translate the second ima
     1&0&-\frac{\mathrm{width}}{2}\\0&1&-\frac{\mathrm{height}}{2}\\ 0 &0 &1
     \end{bmatrix}
 \end{equation}
-Afterwards, we apply a rotation to place the epipole on the horizontal axis at some point $(f,0,1)$. If the epipole is originally located at homogeneous coordinates $(e_1, e_2, e_3)$, then the rotation applied is
+Afterwards, we apply a rotation to place the epipole on the horizontal axis at some point $(f,0,1)$. If the epipole is originally located at homogeneous coordinates $(e_1, e_2, 1)$, then the rotation applied is
 \begin{equation}
     R = 
     \begin{bmatrix}
-    \alpha\frac{e_1}{e_3} & \alpha\frac{e_2}{e_3} & 0 \\ -\alpha\frac{e_2}{e_3} &\alpha \frac{e_1}{e_3} & 0\\ 0&0&1
+        \alpha\frac{e_1}{\sqrt{e_1+e_2}} & \alpha\frac{e_2}{\sqrt{e_1+e_2}} & 0 \\ -\alpha\frac{e_2}{\sqrt{e_1+e_2}} &\alpha \frac{e_1}{\sqrt{e_1+e_2}} & 0\\ 0&0&1
     \end{bmatrix}
 \end{equation}
 where $\alpha=1$ if $e_1\geq 0$ and $\alpha=-1$ otherwise. After applying this rotation, notice that given any point at $(f,0,1)$, bringing it to a point at infinity on the horizontal axis $(f,0,0)$ only requires applying a transformation
