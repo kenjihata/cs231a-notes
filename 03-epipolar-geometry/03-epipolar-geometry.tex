@@ -65,9 +65,9 @@ In real world situations, however, we are not given the exact location of the 3D
 \label{fig:essential_fundamental_setup}
 \end{figure}
 
-We will now try to develop seamless ways to do map points and epipolar lines across views. If we take the setup given in the original epipolar geometry framework (Figure~\ref{fig:essential_fundamental_setup}), then we shall further define $M$ and $M'$ to be the camera projection matrices that map 3D points into their respective 2D image plane locations. Let us assume that the world reference system is associated to the first camera with the second camera offset first by a translation $T$ and then by a rotation $R$. This specifies the camera projection matrices to be:
+We will now try to develop seamless ways to do map points and epipolar lines across views. If we take the setup given in the original epipolar geometry framework (Figure~\ref{fig:essential_fundamental_setup}), then we shall further define $M$ and $M'$ to be the camera projection matrices that map 3D points into their respective 2D image plane locations. Let us assume that the world reference system is associated to the first camera with the second camera offset first by a rotation $R$ and then by a translation $T$. This specifies the camera projection matrices to be:
 \begin{equation}
-    M = K\begin{bmatrix} I & 0\end{bmatrix} \ \ \ \ \ M' = K'\begin{bmatrix}R^T & -R^TT\end{bmatrix}
+    M = K\begin{bmatrix} I & 0\end{bmatrix} \ \ \ \ \ M' = K'\begin{bmatrix}R & T\end{bmatrix}
     \label{eq:projection_matrices}
 \end{equation}
 
@@ -75,13 +75,19 @@ We will now try to develop seamless ways to do map points and epipolar lines acr
 In the simplest case, let us assume that we have \emph{canonical cameras}, in which $K = K' = I$. This reduces Equation~\ref{eq:projection_matrices} to 
 
 \begin{equation}
-    M = \begin{bmatrix} I & 0\end{bmatrix} \ \ \ \ \ M' = \begin{bmatrix}R^T & -R^TT\end{bmatrix}
+    M = \begin{bmatrix} I & 0\end{bmatrix} \ \ \ \ \ M' = \begin{bmatrix}R & T\end{bmatrix}
     \label{eq:projection_matrices_canonical}
 \end{equation}
 
-Furthermore, this means that the location of $p'$ in the first camera's reference system is $Rp' + T$. Since the vectors $Rp'+T$ and $T$ lie in the epipolar plane, then if we take the cross product of $T\times(Rp' + T) = T \times Rp'$, we will get a vector normal to the epipolar plane. This also means that $p$, which lies in the epipolar plane is normal to $T\times Rp'$, giving us the constraint that 
+Furthermore, this means that the location of $p'$ in the first camera's reference system is $R^Tp' - R^TT$. Since the vectors $R^Tp' R^TT$ and $R^TT$ lie in the epipolar plane, then if we take the cross product of $R^TT\times(R^Tp' -R^T T) = R^TT \times R^Tp' = R^T(T \times p')$, we will get a vector normal to the epipolar plane. This also means that $p$, which lies in the epipolar plane is normal to $R^T(T\times p')$, giving us the constraint that their dot product is zero:
 \begin{equation}
-    p^T \cdot [T\times Rp']  = 0
+    \begin{split}
+    	(R^T(T\times p')))^T p = 0\\
+    	(T\times p')^T R p = 0 \\ 
+    	([T_\times] p')^T R p = 0 \\ 
+    	p'^T [T_\times]^T R p = 0 \\
+	p'^T [T_\times] R p = 0
+    \end{split}
     \label{eq:essential1}
 \end{equation}
 
@@ -100,7 +106,7 @@ The matrix $E = [T_\times]R$ is known as the \emph{Essential Matrix}, creating a
 \end{equation}
 The Essential matrix is a $3\times3$ matrix that contains 5 degrees of freedom. It has rank 2 and is singular. 
 
-The Essential matrix is useful for computing the epipolar lines associated with $p$ and $p'$. For instance, $\ell = Ep'$ gives the epipolar line in the image of camera 1. Similarly $\ell' = E^Tp$ gives the epipolar line in the image of camera 2. Other interesting properties of the essential matrix is that its matrix product with the epipoles equate to zero: $Ee' = E^Te = 0$. 
+The Essential matrix is useful for computing the epipolar lines associated with $p$ and $p'$. For instance, $\ell' = Ep$ gives the epipolar line in the image of camera 2. Similarly $\ell = E^Tp'$ gives the epipolar line in the image of camera 1. Other interesting properties of the essential matrix is that its matrix product with the epipoles equate to zero: $Ee' = E^Te = 0$. 
 %TODO: WHY???
 
 %TODO: Section on deriving the Rotation and Translation from E  
@@ -109,21 +115,21 @@ The Essential matrix is useful for computing the epipolar lines associated with 
 Although, we derived a relationship between $p$ and $p'$ when we have canonical cameras, we should be able to find a more general expression when the cameras are no longer canonical. Recall that gives us the projection matrices:
 
 \begin{equation}
-    M = K\begin{bmatrix} I & 0\end{bmatrix} \ \ \ \ \ M' = K'\begin{bmatrix}R^T & -R^TT\end{bmatrix}
+    M = K\begin{bmatrix} I & 0\end{bmatrix} \ \ \ \ \ M' = K'\begin{bmatrix}R & T\end{bmatrix}
     \label{eq:projection_matrices2}
 \end{equation}
 
 First, we must define $p_c = K^{-1}p$ and $p_c' = K'^{-1}p'$ to be the projections of $P$ to the corresponding camera images if the cameras were canonical. Recall that in the canonical case:
 \begin{equation}
-    p^T_c [T_\times]Rp_c' = 0
+    p'^T_c [T_\times]Rp_c = 0
     \label{eq:canonical_constraint}
 \end{equation}
 By substituting in the values of $p_c$ and $p_c'$, we get
 \begin{equation}
-    p^TK^{-T} [T_\times]RK'^{-1}p' = 0
+    p'^TK^{-T} [T_\times]RK'^{-1}p = 0
     \label{eq:canonical_constraint_substitute}
 \end{equation}
-The matrix $F = K^{-T} [T_\times]RK'^{-1}$ is known as the \emph{Fundamental Matrix}, which acts similar to the Essential matrix from the previous section but also encodes information about the camera matrices $K, K'$ and the relative translation $T$ and rotation $R$ between the cameras. Therefore, it is also useful in computing the epipolar lines associated with $p$ and $p'$, even when the camera matrices $K, K'$ and the transformation $R,T$ are unknown. Similar to the Essential matrix, we can compute the epipolar lines $\ell = Fp'$ and $\ell' = F^T p$ from just the Fundamental matrix and the corresponding points. One main difference between the Fundamental matrix and the Essential matrix is that the Fundamental matrix contains 7 degrees of freedom, compared to the Essential matrix's 5 degrees of freedom.
+The matrix $F = K^{-T} [T_\times]RK'^{-1}$ is known as the \emph{Fundamental Matrix}, which acts similar to the Essential matrix from the previous section but also encodes information about the camera matrices $K, K'$ and the relative translation $T$ and rotation $R$ between the cameras. Therefore, it is also useful in computing the epipolar lines associated with $p$ and $p'$, even when the camera matrices $K, K'$ and the transformation $R,T$ are unknown. Similar to the Essential matrix, we can compute the epipolar lines $\ell' = Fp$ and $\ell = F^T p'$ from just the Fundamental matrix and the corresponding points. One main difference between the Fundamental matrix and the Essential matrix is that the Fundamental matrix contains 7 degrees of freedom, compared to the Essential matrix's 5 degrees of freedom.
 
 But how is the Fundamental matrix useful? Like the Essential matrix, if we know the Fundamental matrix, then simply knowing a point in an image gives us an easy constraint (the epipolar line) of the corresponding point in the other image. Therefore, without knowing the actual position of $P$ in 3D space, or any of the extrinsic or intrinsic characteristics of the cameras, we can establish a relationship between any $p$ and $p'$. 
 
@@ -137,9 +143,9 @@ But how is the Fundamental matrix useful? Like the Essential matrix, if we know 
 \subsection{The Eight-Point Algorithm}
 Still, the assumption that we can have the Fundamental matrix, which is defined by a matrix product of the camera parameters, seems rather large. However, it is possible to estimate the Fundamental matrix given two images of the same scene and without knowing the extrinsic or intrinsic parameters of the camera. The method we discuss for doing so is known as the \emph{Eight-Point Algorithm}, which was proposed by Longuet-Higgins in 1981 and extended by Hartley in 1995. As the title suggests, the Eight-Point Algorithm assumes that a set of at least 8 pairs of corresponding points between two images is available.
 
-Each correspondence $p_i = (u_i, v_i, 1)$ and $p'_i = (u_i', v_i', 1)$ gives us the epipolar constraint $p_i^T F p_i' = 0$. We can reformulate the constraint as follows:
+Each correspondence $p_i = (u_i, v_i, 1)$ and $p'_i = (u_i', v_i', 1)$ gives us the epipolar constraint $p_i'^T F p_i = 0$. We can reformulate the constraint as follows:
 \begin{equation}
-    \begin{bmatrix}u_iu_i' & u_iv_i' & u_i & v_i & v_iu_i' & v_iv_i' & u_i' & v_i' & 1\end{bmatrix}
+    \begin{bmatrix}u_iu_i' & v_iu_i' & u'_i & u_iv'_i &  v_iv_i' & v_i' & u_i & v_i & 1\end{bmatrix}
     \begin{bmatrix}F_{11}\\F_{12}\\F_{13}\\F_{21}\\F_{22}\\F_{23}\\F_{31}\\F_{32}\\F_{33}\end{bmatrix} = 0
 \end{equation}
 
@@ -147,14 +153,14 @@ Since this constraint is a scalar equation, it only constrains one degree of fre
 
 \begin{equation}
     \begin{bmatrix}
-    u_1u_1' & u_1v_1' & u_1 & v_1 & v_1u_1' & v_1v_1' & u_1' & v_1' & 1 \\ 
-    u_2u_2' & u_2v_2' & u_2 & v_2 & v_2u_2' & v_2v_2' & u_2' & v_2' & 1 \\
-    u_3u_3' & u_3v_3' & u_3 & v_3 & v_3u_3' & v_3v_3' & u_3' & v_3' & 1 \\
-    u_4u_4' & u_4v_4' & u_4 & v_4 & v_4u_4' & v_4v_4' & u_4' & v_4' & 1\\
-    u_5u_5' & u_5v_5' & u_5 & v_5 & v_5u_5' & v_5v_5' & u_5' & v_5' & 1\\
-    u_6u_6' & u_6v_6' & u_6 & v_6 & v_6u_6' & v_6v_6' & u_6' & v_6' & 1 \\
-    u_7u_7' & u_7v_7' & u_7 & v_7 & v_7u_7' & v_7v_7' & u_7' & v_7' & 1 \\
-    u_8u_8' & u_8v_8' & u_8 & v_8 & v_8u_8' & v_8v_8' & u_8' & v_8' & 1
+    u_1u_1' & v_1u_1' & u'_1 & u_1v'_1 &  v_1v_1' & v_1' & u_1 & v_1 & 1 \\ 
+    u_2u_2' & v_2u_2' & u'_2 & u_2v'_2 &  v_2v_2' & v_2' & u_2 & v_2 & 1 \\
+    u_3u_3' & v_3u_3' & u'_3 & u_3v'_3 &  v_3v_3' & v_3' & u_3 & v_3 & 1 \\
+    u_4u_4' & v_4u_4' & u'_4 & u_4v'_4 &  v_4v_4' & v_4' & u_4 & v_4 & 1\\
+    u_5u_5' & v_5u_5' & u'_5 & u_5v'_5 &  v_5v_5' & v_5' & u_5 & v_5 & 1\\
+    u_6u_6' & v_6u_6' & u'_6 & u_6v'_6 &  v_6v_6' & v_6' & u_6 & v_6 & 1 \\
+    u_7u_7' & v_7u_7' & u'_7 & u_7v'_7 &  v_7v_7' & v_7' & u_7 & v_7 & 1 \\
+    u_8u_8' & v_8u_8' & u'_8 & u_8v'_8 &  v_8v_8' & v_8' & u_8 & v_8 & 1
     \end{bmatrix}
     \begin{bmatrix}F_{11}\\F_{12}\\F_{13}\\F_{21}\\F_{22}\\F_{23}\\F_{31}\\F_{32}\\F_{33}\end{bmatrix} = 0
 \end{equation}
@@ -180,7 +186,7 @@ F = U\begin{bmatrix}\Sigma_1&0&0\\0&\Sigma_2&0\\0&0&0\end{bmatrix}V^T
 \end{equation}
 
 \subsection{The Normalized Eight-Point Algorithm}
-In practice, the standard least-squares approach to the Eight-Point Algorithm is not precise. Often, the distance between a point $p$ and its corresponding epipolar line $Fp'$ will be very large, usually on the scale of 10+ pixels. To reduce this error, we can consider a modified version of the Eight-Point Algorithm called the \emph{Normalized Eight-Point Algorithm}. 
+In practice, the standard least-squares approach to the Eight-Point Algorithm is not precise. Often, the distance between a point $p_i$ and its corresponding epipolar line $\ell_i = F^Tp'$ will be very large, usually on the scale of 10+ pixels. To reduce this error, we can consider a modified version of the Eight-Point Algorithm called the \emph{Normalized Eight-Point Algorithm}. 
 
 The main problem of the standard Eight-Point Algorithm stems from the fact that $W$ is ill-conditioned for SVD. For SVD to work properly, $W$ should have one singular value equal to (or near) zero, with the other singular values being nonzero. However, the correspondences $p_i = (u_i, v_i, 1)$ will often have extremely large values in the first and second coordinates due to the pixel range of a modern camera (i.e. $p_i = (1832, 1023, 1))$. If the image points used to construct $W$ are in a relatively small region of the image, then each the vectors for $p_i$ and $p_i'$ will generally be very similar. Consequently, the constructed $W$ matrix will have one very large singular value, with the rest relatively small. 
 
@@ -192,7 +198,7 @@ q_i = Tp_i \ \ \ \ \ q_i' = T'p_i'
 \end{equation}
 Using the new, normalized coordinates, we can compute the new $F_q$ using the regular least-squares Eight Point Algorithm. However, the matrix $F_q$ is the fundamental matrix for the normalized coordinates. For it to be usable on regular coordinate space, we need to de-normalize it, giving
 \begin{equation}
-F = T^TF_qT'
+F = T'^TF_qT
 \end{equation}
 Ultimately, this new Fundamental matrix $F$ gives good results in real-world applications.
 
@@ -244,14 +250,14 @@ The first step in achieving such a transformation is to translate the second ima
     1&0&-\frac{\mathrm{width}}{2}\\0&1&-\frac{\mathrm{height}}{2}\\ 0 &0 &1
     \end{bmatrix}
 \end{equation}
-Afterwards, we apply a rotation to place the epipole on the horizontal axis at some point $(f,0,1)$. If the epipole is originally located at homogeneous coordinates $(e_1, e_2, 1)$, then the rotation applied is
+Afterwards, we apply a rotation to place the epipole on the horizontal axis at some point $(f,0,1)$. If the epipole $e'$ is originally located at homogeneous coordinates $(e'_1, e'_2, 1)$, then the rotation applied is
 \begin{equation}
     R = 
     \begin{bmatrix}
-        \alpha\frac{e_1}{\sqrt{e_1+e_2}} & \alpha\frac{e_2}{\sqrt{e_1+e_2}} & 0 \\ -\alpha\frac{e_2}{\sqrt{e_1+e_2}} &\alpha \frac{e_1}{\sqrt{e_1+e_2}} & 0\\ 0&0&1
+        \alpha\frac{e'_1}{\sqrt{e_1'^2+e_2'^2}} & \alpha\frac{e'_2}{\sqrt{e_1'^2+e_2'^2}} & 0 \\ -\alpha\frac{e'_2}{\sqrt{e_1'^2+e_2'^2}} &\alpha \frac{e'_1}{\sqrt{e_1'^2+e_2'^2}} & 0\\ 0&0&1
     \end{bmatrix}
 \end{equation}
-where $\alpha=1$ if $e_1\geq 0$ and $\alpha=-1$ otherwise. After applying this rotation, notice that given any point at $(f,0,1)$, bringing it to a point at infinity on the horizontal axis $(f,0,0)$ only requires applying a transformation
+where $\alpha=1$ if $e'_1\geq 0$ and $\alpha=-1$ otherwise. After applying this rotation, notice that given any point at $(f,0,1)$, bringing it to a point at infinity on the horizontal axis $(f,0,0)$ only requires applying a transformation
 \begin{equation}
     G =
     \begin{bmatrix}
