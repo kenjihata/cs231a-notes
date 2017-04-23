@@ -84,9 +84,6 @@ Furthermore, this means that the location of $p'$ in the first camera's referenc
     \begin{split}
     	(R^T(T\times p')))^T p = 0\\
     	(T\times p')^T R p = 0 \\ 
-    	([T_\times] p')^T R p = 0 \\ 
-    	p'^T [T_\times]^T R p = 0 \\
-	p'^T [T_\times] R p = 0
     \end{split}
     \label{eq:essential1}
 \end{equation}
@@ -98,11 +95,15 @@ From linear algebra, we can introduce a different and compact expression for the
 
 Combining this expression with Equation~\ref{eq:essential1}, we can convert the cross product term into matrix multiplication, giving
 \begin{equation}
-    p^T[T_\times]Rp' = 0
+    \begin{split}
+        ([T_\times] p')^T R p = 0 \\ 
+    	  p'^T [T_\times]^T R p = 0 \\
+	  p'^T [T_\times] R p = 0
+    \end{split}
 \end{equation}
 The matrix $E = [T_\times]R$ is known as the \emph{Essential Matrix}, creating a compact expression for the epipolar constraint: 
 \begin{equation}
-    p^T E p' = 0
+    p'^T E p = 0
 \end{equation}
 The Essential matrix is a $3\times3$ matrix that contains 5 degrees of freedom. It has rank 2 and is singular. 
 
