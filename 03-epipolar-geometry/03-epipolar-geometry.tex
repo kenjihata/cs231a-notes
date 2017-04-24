@@ -223,7 +223,7 @@ We can see that the direction of $\ell$ is horizontal, as is the direction of $\
 \end{figure}
  
 
-If we use the epipolar constraint $p^TEp'=0$, then we arrive at the fact that $v=v'$, demonstrating that $p$ and $p'$ share the same $v$-coordinate. Consequently, there exists a very straightforward relationship between the corresponding points. Therefore, \emph{rectification}, or the process of making any two given images parallel, becomes useful when discerning the relationships between corresponding points in images.
+If we use the epipolar constraint $p'^T Ep=0$, then we arrive at the fact that $v=v'$, demonstrating that $p$ and $p'$ share the same $v$-coordinate. Consequently, there exists a very straightforward relationship between the corresponding points. Therefore, \emph{rectification}, or the process of making any two given images parallel, becomes useful when discerning the relationships between corresponding points in images.
 
 \begin{figure}[h!]
 \centering
@@ -251,7 +251,7 @@ The first step in achieving such a transformation is to translate the second ima
     1&0&-\frac{\mathrm{width}}{2}\\0&1&-\frac{\mathrm{height}}{2}\\ 0 &0 &1
     \end{bmatrix}
 \end{equation}
-Afterwards, we apply a rotation to place the epipole on the horizontal axis at some point $(f,0,1)$. If the epipole $e'$ is originally located at homogeneous coordinates $(e'_1, e'_2, 1)$, then the rotation applied is
+After applying the translation, we apply a rotation to place the epipole on the horizontal axis at some point $(f,0,1)$. If the translated epipole $Te'$ is located at homogeneous coordinates $(e'_1, e'_2, 1)$, then the rotation applied is
 \begin{equation}
     R = 
     \begin{bmatrix}
@@ -300,7 +300,7 @@ Notice that if the columns of $M$ were added by any scalar multiple of $e$, then
 \end{equation}
 for some vector $v$. In practice, defining $M$ by setting $v=\begin{bmatrix}1 & 1 & 1\end{bmatrix}$ works very well.
 
-To finally solve for $H_1$, we need to compute the $\mathbf{a}$ values of $H_A$. Recall that we want to find a $H_1, H_2$ to minimize the problem posed in Equation~\ref{eq:rectification_minimization}. Since we already know the value of $H_2$ and $M$, then we can substitute $\hat{p}_i = H_2Mp_i$ and $\hat{p}_i' = H_2p_i$ and the minimization problem becomes
+To finally solve for $H_1$, we need to compute the $\mathbf{a}$ values of $H_A$. Recall that we want to find a $H_1, H_2$ to minimize the problem posed in Equation~\ref{eq:rectification_minimization}. Since we already know the value of $H_2$ and $M$, then we can substitute $\hat{p}_i = H_2Mp_i$ and $\hat{p}_i' = H_2p_i'$ and the minimization problem becomes
 \begin{equation}
 \arg \min_{H_A} \sum_i \|H_A\hat{p}_i - \hat{p}_i'\|^2 
 \end{equation}
