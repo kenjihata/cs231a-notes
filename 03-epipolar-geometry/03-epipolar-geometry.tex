@@ -109,7 +109,7 @@ The Essential matrix is a $3\times3$ matrix that contains 5 degrees of freedom. 
 
 The Essential matrix is useful for computing the epipolar lines associated with $p$ and $p'$. For instance, $\ell' = Ep$ gives the epipolar line in the image of camera 2. Similarly $\ell = E^Tp'$ gives the epipolar line in the image of camera 1. Other interesting properties of the essential matrix is that its matrix product with the epipoles equate to zero: $Ee = E^Te' = 0$. 
 %TODO: WHY???
-Because for any point $x$ (other than $e$) in the image of camera 1, the corresponding epipolar line in the image of camera 2, $l'=Ex$, contains the epipole $e'$. Thus $e'$ satisfies $e'^T(Ex) = (e'^TE)x=0$ for all the $x$ in image 1, so $e'^TE=0$. Similarly $Ee=0$.
+Because for any point $x$ (other than $e$) in the image of camera 1, the corresponding epipolar line in the image of camera 2, $l'=Ex$, contains the epipole $e'$. Thus $e'$ satisfies $e'^T(Ex) = (e'^TE)x=0$ for all the $x$, so $e'^TE=0$. Similarly $Ee=0$.
 
 %TODO: Section on deriving the Rotation and Translation from E  
 
