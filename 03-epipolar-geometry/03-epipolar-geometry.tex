@@ -107,8 +107,9 @@ The matrix $E = [T_\times]R$ is known as the \emph{Essential Matrix}, creating a
 \end{equation}
 The Essential matrix is a $3\times3$ matrix that contains 5 degrees of freedom. It has rank 2 and is singular. 
 
-The Essential matrix is useful for computing the epipolar lines associated with $p$ and $p'$. For instance, $\ell' = Ep$ gives the epipolar line in the image of camera 2. Similarly $\ell = E^Tp'$ gives the epipolar line in the image of camera 1. Other interesting properties of the essential matrix is that its matrix product with the epipoles equate to zero: $Ee' = E^Te = 0$. 
+The Essential matrix is useful for computing the epipolar lines associated with $p$ and $p'$. For instance, $\ell' = Ep$ gives the epipolar line in the image of camera 2. Similarly $\ell = E^Tp'$ gives the epipolar line in the image of camera 1. Other interesting properties of the essential matrix is that its matrix product with the epipoles equate to zero: $Ee = E^Te' = 0$. 
 %TODO: WHY???
+Because for any point $x$ (other than $e$) in the image of camera 1, the corresponding epipolar line in the image of camera 2, $l'=Ex$, contains the epipole $e'$. Thus $e'$ satisfies $e'^T(Ex) = (e'^TE)x=0$ for all the $x$, so $e'^TE=0$. Similarly $Ee=0$.
 
 %TODO: Section on deriving the Rotation and Translation from E  
 
@@ -298,7 +299,7 @@ Notice that if the columns of $M$ were added by any scalar multiple of $e$, then
 \begin{equation}
     M = [e]_\times F + e v^T
 \end{equation}
-for some vector $v$. In practice, defining $M$ by setting $v=\begin{bmatrix}1 & 1 & 1\end{bmatrix}$ works very well.
+for some vector $v$. In practice, defining $M$ by setting $v=\begin{bmatrix}1 & 1 & 1\end{bmatrix}^T$ works very well.
 
 To finally solve for $H_1$, we need to compute the $\mathbf{a}$ values of $H_A$. Recall that we want to find a $H_1, H_2$ to minimize the problem posed in Equation~\ref{eq:rectification_minimization}. Since we already know the value of $H_2$ and $M$, then we can substitute $\hat{p}_i = H_2Mp_i$ and $\hat{p}_i' = H_2p_i'$ and the minimization problem becomes
 \begin{equation}
