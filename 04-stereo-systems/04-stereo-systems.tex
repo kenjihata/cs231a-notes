@@ -87,7 +87,7 @@ Notice that if we set $e_i$ to be a $2\times1$ vector $e_i = M\hat{P}_i - p_i$, 
 \end{equation}
 which can be perfectly represented as a nonlinear least squares problem. 
 
-In these notes, we will cover how we can use the popular Gauss-Newton algorithm to find an approximate solution to this nonlinear least squares problem. First, let us first assume that we have a somewhat reasonable estimate of the 3D point $\hat{P}$, which we can compute by the previous linear method. The key insight of the Gauss-Newton algorithm is to update our estimate by correcting it towards an even better estimate that minimizes the reprojection error.  At each step we want to update our estimate $\hat{P}$ by some $\delta_P$: $\hat{P} = \hat{P} + \delta_P$.
+In these notes, we will cover how we can use the popular Gauss-Newton algorithm to find an approximate solution to this nonlinear least squares problem. First, let us assume that we have a somewhat reasonable estimate of the 3D point $\hat{P}$, which we can compute by the previous linear method. The key insight of the Gauss-Newton algorithm is to update our estimate by correcting it towards an even better estimate that minimizes the reprojection error.  At each step we want to update our estimate $\hat{P}$ by some $\delta_P$: $\hat{P} = \hat{P} + \delta_P$.
 
 But how do we choose the update parameter $\delta_P$? The key insight of the Gauss-Newton algorithm is to linearize the residual function near the current estimate $\hat{P}$. In the case of our problem, this means that the residual error $e$ of a point $P$ can be thought of as:
 \begin{equation}
@@ -136,7 +136,7 @@ M = \begin{bmatrix}
     A & b \\ v & 1
 \end{bmatrix}    
 \end{equation}
-where $v$ is some non-zero $1\times3$ vector. On the other hand, for the weak perspective model, $v=0$. We find that this creates a homogeneous coordinate of $MX$ is $1$: 
+where $v$ is some non-zero $1\times3$ vector. On the other hand, for the weak perspective model, $v=0$. We find that this property makes the homogeneous coordinate of $MX$ equal to $1$: 
 \begin{equation}
     x = MX = \begin{bmatrix}m_1 \\ m_2 \\ 0 ~~ 0 ~~ 0 ~~ 1\end{bmatrix} \begin{bmatrix}X_1\\X_2\\X_3 \\ 1\end{bmatrix} = \begin{bmatrix}m_1X \\ m_2 X \\ 1\end{bmatrix}
 \end{equation}
@@ -249,7 +249,7 @@ M_i=
 
 Moreover, similar to the affine case where the solution can be found up to an affine transformation, solutions for structure and motion can be determined up a projective transformation in the general case: we can always arbitrarily apply a $4\times 4$ projective transformation $H$ to the motion matrix, as long as we also transform the structure matrix by the inverse transformation $H^{-1}$. The resulting observations in the image plane will still be the same.
 
-Similar to the affine case, we can set up the general structure from motion problem as estimating both the $m$ motion matrices $M_i$ and $n$ 3D points $X_j$ from $mn$ observations $x_{ij}$. Because cameras and points can only be recovered up to a $4\times 4$ projective transformation (16 parameters), we have $11m+3n-16$ unknowns in $2mn$ equations. From these facts, we can determine the number of views and observations that are required to solve for the unknowns. 
+Similar to the affine case, we can set up the general structure from motion problem as estimating both the $m$ motion matrices $M_i$ and $n$ 3D points $X_j$ from $mn$ observations $x_{ij}$. Because cameras and points can only be recovered up to a $4\times 4$ projective transformation up to scale (15 parameters), we have $11m+3n-15$ unknowns in $2mn$ equations. From these facts, we can determine the number of views and observations that are required to solve for the unknowns. 
 
 \subsection{The algebraic approach}
 
@@ -305,7 +305,7 @@ By the definition of cross product, $p' \times b$ is perpendicular to $p'$. Ther
 \end{equation}
 Looking at this constraint, it should remind you of the general definition of the Fundamental matrix $p'^T Fp = 0$. If we set $F=[b]_\times A$, then extracting $A$ and $b$ simply breaks down to a decomposition problem. 
 
-Let us begin by determining $b$. Again, by the definition of cross product, we can simply $Fb$ as 
+Let us begin by determining $b$. Again, by the definition of cross product, we can simply write $Fb$ as 
 \begin{equation}
     Fb = [b]_\times A b = (b\times A)b = 0
     \label{eq:cross_b}
