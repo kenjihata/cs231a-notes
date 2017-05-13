@@ -213,7 +213,7 @@ E = [T_\times] R = \begin{bmatrix} 0 & 0 & 0\\ 0 & 0 & -T_x \\ 0 & T_x  & 0 \end
 
 Once $E$ is known, we can find the directions of the epipolar lines associated with points in the image planes. Let us compute the direction of the epipolar line $\ell$ associated with point $p'$:
 \begin{equation}
-\ell = Ep' = \begin{bmatrix} 0 & 0 & 0\\ 0 & 0 & -T_x \\ 0 & T_x  & 0 \end{bmatrix} \begin{bmatrix}u'\\v'\\1\end{bmatrix} = \begin{bmatrix} 0\\ -T \\ Tv'\end{bmatrix}
+\ell = E^Tp' = \begin{bmatrix} 0 & 0 & 0\\ 0 & 0 & T_x \\ 0 & -T_x  & 0 \end{bmatrix} \begin{bmatrix}u'\\v'\\1\end{bmatrix} = \begin{bmatrix} 0\\ T_x \\ -T_xv'\end{bmatrix}
 \end{equation}
 We can see that the direction of $\ell$ is horizontal, as is the direction of $\ell'$, which is computed in a similar manner.
 \begin{figure}[h!]
