@@ -230,18 +230,18 @@ When $2n > 11$, our homogenous linear system is overdetermined. For such a syste
 \end{equation}
 To solve this minimization problem, we simply use singular value decomposition. If we let $P = UDV^T$, then the solution to the above minimization is to set $m$ equal to the last column of $V$. The derivation for this solution is outside the scope of this class and you may refer to Section 5.3 of Hartley \& Zisserman on pages 592-593 for more details.
 
-After reformatting the vector $m$ into the matrix $M$, we now want to explicitly solve for the extrinisic and intrisnsic parameters. We know our SVD-solved $M$ is known up to scale, which means that the true values of the camera matrix are some scalar multiple of $M$:
+After reformatting the vector $m$ into the matrix $M$, we now want to explicitly solve for the extrinsic and intrinsic parameters. We know our SVD-solved $M$ is known up to scale, which means that the true values of the camera matrix are some scalar multiple of $M$:
 \begin{equation}
 M = \rho\begin{bmatrix}
-\alpha r_1^T - \alpha\cot \theta r_2^T + u_0r_3^T & \alpha t_x - \alpha \cot \theta t_y + u_0 t_z \\
-\frac{\beta}{\sin\theta}r_2^T + v_0r_3^T & \frac{\beta}{\sin\theta}t_y + v_0t_z \\ r_3^T & t_z
+\alpha r_1^T - \alpha\cot \theta r_2^T + c_xr_3^T & \alpha t_x - \alpha \cot \theta t_y + c_x t_z \\
+\frac{\beta}{\sin\theta}r_2^T + c_yr_3^T & \frac{\beta}{\sin\theta}t_y + c_yt_z \\ r_3^T & t_z
 \end{bmatrix}
 \end{equation}
 
-Dividing by the scaling parameter gives
+Here, $r_1^T$, $r_2^T$, and $r_3^T$ are the three rows of $R$. Dividing by the scaling parameter gives
 \[\frac{M}{\rho} = \begin{bmatrix}
-\alpha r_1^T - \alpha\cot \theta r_2^T + u_0r_3^T & \alpha t_x - \alpha \cot \theta t_y + u_0 t_z \\
-\frac{\beta}{\sin\theta}r_2^T + v_0r_3^T & \frac{\beta}{\sin\theta}t_y + v_0t_z \\ r_3^T & t_z
+\alpha r_1^T - \alpha\cot \theta r_2^T + c_xr_3^T & \alpha t_x - \alpha \cot \theta t_y + c_x t_z \\
+\frac{\beta}{\sin\theta}r_2^T + c_yr_3^T & \frac{\beta}{\sin\theta}t_y + c_yt_z \\ r_3^T & t_z
 \end{bmatrix} = \begin{bmatrix}A & b\end{bmatrix} =\begin{bmatrix}
 a_1^T \\ a_2^T \\ a_3^T
 \end{bmatrix} \begin{bmatrix}
@@ -252,8 +252,8 @@ b_1\\b_2\\b_3
 Solving for the intrinsics gives 
 \begin{equation}\begin{aligned}
     \rho &= \pm \frac{1}{\|a_3\|}\\
-    u_o &= \rho^2(a_1\cdot a_3)\\
-    v_o &=\rho^2(a_2\cdot a_3)\\
+    c_x &= \rho^2(a_1\cdot a_3)\\
+    c_y &=\rho^2(a_2\cdot a_3)\\
     \theta &= \cos ^{-1} \frac{(a_1 \times a_3)\cdot(a_2\times a_3)}{\|a_1\times a_3\|\cdot\|a_2\times a_3\|}\\
     \alpha &= \rho^2 \|a_1 \times a_3\| \sin \theta\\
     \beta &= \rho^2 \|a_2 \times a_3\| \sin \theta
@@ -266,7 +266,7 @@ The extrinsics are
     r_3 &= \pm \frac{ a_3}{\| a_3\|}\\
     T &= \rho K^{-1} b
 \end{aligned}\end{equation}
-We leave the derivations as a class exercise or you can refer to Section 1.3.1 of the Forsyth \& Ponce textbook.
+We leave the derivations as a class exercise or you can refer to Section 5.3.1 of the Forsyth \& Ponce textbook.
 
 With the calibration procedure complete, we warn against degenerate cases. Not all sets of $n$ correspondences will work. For example, if the points $P_i$ lie on the same plane, then the system will not be able to be solved. These unsolvable configurations of points are known as \emph{degenerate configurations}. More generally, degenerate configurations have points that lie on the intersection curve of two quadric surfaces. Although this outside the scope of the class, you can find more information in Section 1.3 of the Forsyth \& Ponce textbook. 
 
