@@ -128,10 +128,10 @@ First, we must define $p_c = K^{-1}p$ and $p_c' = K'^{-1}p'$ to be the projectio
 \end{equation}
 By substituting in the values of $p_c$ and $p_c'$, we get
 \begin{equation}
-    p'^TK^{-T} [T_\times]RK'^{-1}p = 0
+    p'^TK'^{-T} [T_\times]RK^{-1}p = 0
     \label{eq:canonical_constraint_substitute}
 \end{equation}
-The matrix $F = K^{-T} [T_\times]RK'^{-1}$ is known as the \emph{Fundamental Matrix}, which acts similar to the Essential matrix from the previous section but also encodes information about the camera matrices $K, K'$ and the relative translation $T$ and rotation $R$ between the cameras. Therefore, it is also useful in computing the epipolar lines associated with $p$ and $p'$, even when the camera matrices $K, K'$ and the transformation $R,T$ are unknown. Similar to the Essential matrix, we can compute the epipolar lines $\ell' = Fp$ and $\ell = F^T p'$ from just the Fundamental matrix and the corresponding points. One main difference between the Fundamental matrix and the Essential matrix is that the Fundamental matrix contains 7 degrees of freedom, compared to the Essential matrix's 5 degrees of freedom.
+The matrix $F = K'^{-T} [T_\times]RK^{-1}$ is known as the \emph{Fundamental Matrix}, which acts similar to the Essential matrix from the previous section but also encodes information about the camera matrices $K, K'$ and the relative translation $T$ and rotation $R$ between the cameras. Therefore, it is also useful in computing the epipolar lines associated with $p$ and $p'$, even when the camera matrices $K, K'$ and the transformation $R,T$ are unknown. Similar to the Essential matrix, we can compute the epipolar lines $\ell' = Fp$ and $\ell = F^T p'$ from just the Fundamental matrix and the corresponding points. One main difference between the Fundamental matrix and the Essential matrix is that the Fundamental matrix contains 7 degrees of freedom, compared to the Essential matrix's 5 degrees of freedom.
 
 But how is the Fundamental matrix useful? Like the Essential matrix, if we know the Fundamental matrix, then simply knowing a point in an image gives us an easy constraint (the epipolar line) of the corresponding point in the other image. Therefore, without knowing the actual position of $P$ in 3D space, or any of the extrinsic or intrinsic characteristics of the cameras, we can establish a relationship between any $p$ and $p'$. 
 
