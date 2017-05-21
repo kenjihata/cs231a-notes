@@ -232,14 +232,14 @@ To solve this minimization problem, we simply use singular value decomposition. 
 
 After reformatting the vector $m$ into the matrix $M$, we now want to explicitly solve for the extrinsic and intrinsic parameters. We know our SVD-solved $M$ is known up to scale, which means that the true values of the camera matrix are some scalar multiple of $M$:
 \begin{equation}
-M = \rho\begin{bmatrix}
+\rho M = \begin{bmatrix}
 \alpha r_1^T - \alpha\cot \theta r_2^T + c_xr_3^T & \alpha t_x - \alpha \cot \theta t_y + c_x t_z \\
 \frac{\beta}{\sin\theta}r_2^T + c_yr_3^T & \frac{\beta}{\sin\theta}t_y + c_yt_z \\ r_3^T & t_z
 \end{bmatrix}
 \end{equation}
 
 Here, $r_1^T$, $r_2^T$, and $r_3^T$ are the three rows of $R$. Dividing by the scaling parameter gives
-\[\frac{M}{\rho} = \begin{bmatrix}
+\[M = \frac{1}{\rho}\begin{bmatrix}
 \alpha r_1^T - \alpha\cot \theta r_2^T + c_xr_3^T & \alpha t_x - \alpha \cot \theta t_y + c_x t_z \\
 \frac{\beta}{\sin\theta}r_2^T + c_yr_3^T & \frac{\beta}{\sin\theta}t_y + c_yt_z \\ r_3^T & t_z
 \end{bmatrix} = \begin{bmatrix}A & b\end{bmatrix} =\begin{bmatrix}
@@ -254,7 +254,7 @@ Solving for the intrinsics gives
     \rho &= \pm \frac{1}{\|a_3\|}\\
     c_x &= \rho^2(a_1\cdot a_3)\\
     c_y &=\rho^2(a_2\cdot a_3)\\
-    \theta &= \cos ^{-1} \frac{(a_1 \times a_3)\cdot(a_2\times a_3)}{\|a_1\times a_3\|\cdot\|a_2\times a_3\|}\\
+    \theta &= \cos ^{-1} \left(-\frac{(a_1 \times a_3)\cdot(a_2\times a_3)}{\|a_1\times a_3\|\cdot\|a_2\times a_3\|}\right)\\
     \alpha &= \rho^2 \|a_1 \times a_3\| \sin \theta\\
     \beta &= \rho^2 \|a_2 \times a_3\| \sin \theta
 \end{aligned}\end{equation}
@@ -263,7 +263,7 @@ The extrinsics are
 \begin{equation}\begin{aligned}
     r_1 &= \frac{a_2\times a_3}{\|a_2\times a_3\|}\\
     r_2 &= r_3\times r_1\\
-    r_3 &= \pm \frac{ a_3}{\| a_3\|}\\
+    r_3 &= \rho a_3\\
     T &= \rho K^{-1} b
 \end{aligned}\end{equation}
 We leave the derivations as a class exercise or you can refer to Section 5.3.1 of the Forsyth \& Ponce textbook.
