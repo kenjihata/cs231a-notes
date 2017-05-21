@@ -82,8 +82,8 @@ In the simplest case, let us assume that we have \emph{canonical cameras}, in wh
 Furthermore, this means that the location of $p'$ in the first camera's reference system is $R^Tp' - R^TT$. Since the vectors $R^Tp' - R^TT$ and $R^TT$ lie in the epipolar plane, then if we take the cross product of $R^TT\times(R^Tp' -R^T T) = R^TT \times R^Tp' = R^T(T \times p')$, we will get a vector normal to the epipolar plane. This also means that $p$, which lies in the epipolar plane is normal to $R^T(T\times p')$, giving us the constraint that their dot product is zero:
 \begin{equation}
     \begin{split}
-    	(R^T(T\times p')))^T p = 0\\
-    	(T\times p')^T R p = 0 \\ 
+      (R^T(T\times p'))^T p = 0\\
+      (T\times p')^T R p = 0 \\
     \end{split}
     \label{eq:essential1}
 \end{equation}
