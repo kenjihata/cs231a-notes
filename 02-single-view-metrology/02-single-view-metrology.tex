@@ -39,13 +39,13 @@ Since they preserve shapes, they also preserve ratio of lengths and angles. Note
 \begin{equation*}
     T(v) = Av + t
 \end{equation*}
-where $A$ is a linear transformation of $\mathbb{R}^n$. In homogenous coordinates, affine transformations are often written as
+where $A$ is a linear transformation of $\mathbb{R}^n$. In homogeneous coordinates, affine transformations are often written as
 \begin{equation*}
     \begin{bmatrix}x'\\y'\\1\end{bmatrix} = \begin{bmatrix}A & t\\ 0 & 1\end{bmatrix}\begin{bmatrix}x\\y\\1\end{bmatrix}
 \end{equation*}
 From the above equation, it is easy to see that all similarities (and thus isometries) are a specific case of affinities.
 
-\emph{Projective transformations} or \emph{homographies} are any transformations that maps lines to lines, but does not necessarily preserve parallelism. In homogenous coordinates, projective transformations are represented as
+\emph{Projective transformations} or \emph{homographies} are any transformations that maps lines to lines, but does not necessarily preserve parallelism. In homogeneous coordinates, projective transformations are represented as
 \begin{equation*}
     \begin{bmatrix}x'\\y'\\1\end{bmatrix} = \begin{bmatrix}A & t\\ v & b\end{bmatrix}\begin{bmatrix}x\\y\\1\end{bmatrix}
 \end{equation*}
@@ -58,7 +58,7 @@ Despite not preserving parallelism, projective transformations does preserve col
 We leave proving the invariance of the cross ratio under projective transformation as a class exercise.
 
 \section{Points and Lines at Infinity}
-Lines are important for determining structure in images, so knowing their definitions in both 2D and 3D is essential. A line in 2D can be represented with the homogenous vector $\ell = \begin{bmatrix}a & b & c \end{bmatrix}^T$. The ratio $-\frac{a}{b}$ captures the slope of the line and the ratio $-\frac{c}{b}$ captures the y-intercept. Formally, 2D lines are defined by:
+Lines are important for determining structure in images, so knowing their definitions in both 2D and 3D is essential. A line in 2D can be represented with the homogeneous vector $\ell = \begin{bmatrix}a & b & c \end{bmatrix}^T$. The ratio $-\frac{a}{b}$ captures the slope of the line and the ratio $-\frac{c}{b}$ captures the y-intercept. Formally, 2D lines are defined by:
 \begin{equation}
 \forall p = \begin{bmatrix}x\\y\end{bmatrix} \in \ell,\ \  \begin{bmatrix}a & b & c\end{bmatrix}\begin{bmatrix}x\\y\\1\end{bmatrix} = 0
 \end{equation}
@@ -69,7 +69,7 @@ In general, two lines $\ell$ and $\ell'$ will intersect at a point $x$. This poi
     Given two intersecting lines $\ell$ and $\ell'$, the intersection point $x$ should lie on both lines $\ell$ and $\ell'$. Therefore, $x^T \ell = 0$ and $x^T\ell' = 0$. If we set $x = \ell \times \ell'$, then by definition of cross product, the vector $x$ is orthogonal to both vectors $\ell$ and $\ell'$. By the definition of orthogonality, $x^T \ell = 0$ and $x^T\ell' = 0$. Thus, this definition of $x$ satisfies the constraints. 
 \end{proof}
 
-What about the case of parallel lines? Everyday knowledge expects these lines to never intersect. However, this definition could be rewritten to say that these lines intersect at infinity. In homogenous coordinates, a point at infinity is written as $\begin{bmatrix}x & y & 0\end{bmatrix}^T$. Recall the Euclidean coordinates are gathered by dividing all coordinates by the last coordinate. In this case, the coordinate is zero, achieving a point at infinity. Therefore, homogenous coordinates give a good formulation of determining intersections, even in cases of parallel lines.
+What about the case of parallel lines? Everyday knowledge expects these lines to never intersect. However, this definition could be rewritten to say that these lines intersect at infinity. In homogeneous coordinates, a point at infinity is written as $\begin{bmatrix}x & y & 0\end{bmatrix}^T$. Recall the Euclidean coordinates are gathered by dividing all coordinates by the last coordinate. In this case, the coordinate is zero, achieving a point at infinity. Therefore, homogeneous coordinates give a good formulation of determining intersections, even in cases of parallel lines.
 
 Now, let's consider two parallel lines $\ell$ and $\ell'$. When two lines are parallel, their slope is equal and thus $\frac{a}{b} = \frac{a'}{b'}$. If we compute the point of intersection using homogenoous coordinates, then we verify that
 \begin{equation}
@@ -103,7 +103,7 @@ p' =Hp_\infty = \begin{bmatrix} A &t \\ 0&1 \end{bmatrix}\begin{bmatrix}1\\1\\0\
 Now let's apply a projective transformation $H$ to a line $\ell$ to get a new line $\ell'$. All points $x$ that pass through a line must satisfy the property $x^T\ell = 0$. In the transformed space, we know that lines still map to lines, which means that $x'\ell' = 0$. We can use the identity property to get \[x^TI\ell = x^TH^T H^{-T} \ell = 0\]If we apply a projective transformation to the line, then all the points become transformed as well, giving $x' = Hx$. Thus we get $x^TH^T H^{-T} \ell = x'^T\ell'$, and we find the projective transformation of a line is $\ell' = H^{-T}\ell$. Similar to our observations with points at infinity, we find that the projective transformation of a line at infinity does not necessarily map to another line at infinity. Additionally, affine transformations still map lines at infinity to lines at infinity.
 
 \section{Vanishing Points and Lines}
-So far, we have introduced the concepts of lines and points at infinity in 2D. Let us now introduce the equivalent concepts for 3D in its corresponding homogenous coordinates. 
+So far, we have introduced the concepts of lines and points at infinity in 2D. Let us now introduce the equivalent concepts for 3D in its corresponding homogeneous coordinates. 
 
 In the 3D world, we are now introduced to the concepts of planes. We can represent a plane as a vector $\begin{bmatrix}a&b&c&d\end{bmatrix} ^T$, where $(a,b,c)$ form a normal vector and $d$ is the distance from the origin to the plane in that normal vector's direction. Formally, a plane is defined as all the points $x$ which satisfy
 \begin{equation}

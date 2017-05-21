@@ -110,7 +110,7 @@ The next effect we must account for that the points in digital images are expres
 
 Is there a better way to represent this projection from $P\rightarrow P'$? If this projection is a linear transformation, then it can be represented as a product of a matrix and the input vector (in this case, it would be $P$. However, from Equation~\ref{eq:finalImage}, we see that this projection $P\rightarrow P'$ is not linear, as the operation divides one of the input parameters (namely $z$). Still, representing this projection as a matrix-vector product would be useful for future derivations. Therefore, can we represent our transformation as a matrix-vector product despite its nonlinearity?
 
-One way to get around this problem is to change the coordinate systems. For example, we introduce a new coordinate, such that any point $P' =(x',y')$ becomes $(x',y',1)$. Similarly, any point $P =(x,y,z)$ becomes $(x,y,z,1)$. This augmented space is referred to as the \emph{homogenous coordinate system}. As demonstrated previously, to convert some Euclidean vector $(v_1,...,v_n)$ to homogenous coordinates, we simply append a 1 in a new dimension to get $(v_1,...,v_n,1)$. Note that the equality between a vector and its homogenous coordinates only occurs when the final coordinate equals one. Therefore, when converting back from arbitrary homogenous coordinates $(v_1,  ... , v_n , w)$, we get Euclidean coordinates $(\frac{v_1}{w},...,\frac{v_n}{w})$. Using homogenous coordinates, we can formulate
+One way to get around this problem is to change the coordinate systems. For example, we introduce a new coordinate, such that any point $P' =(x',y')$ becomes $(x',y',1)$. Similarly, any point $P =(x,y,z)$ becomes $(x,y,z,1)$. This augmented space is referred to as the \emph{homogeneous coordinate system}. As demonstrated previously, to convert some Euclidean vector $(v_1,...,v_n)$ to homogeneous coordinates, we simply append a 1 in a new dimension to get $(v_1,...,v_n,1)$. Note that the equality between a vector and its homogeneous coordinates only occurs when the final coordinate equals one. Therefore, when converting back from arbitrary homogeneous coordinates $(v_1,  ... , v_n , w)$, we get Euclidean coordinates $(\frac{v_1}{w},...,\frac{v_n}{w})$. Using homogeneous coordinates, we can formulate
 \begin{equation}
     P_h' = \begin{bmatrix}\alpha x + c_xz\\\beta y + c_yz \\ z\end{bmatrix} = 
     \begin{bmatrix}
@@ -123,10 +123,10 @@ One way to get around this problem is to change the coordinate systems. For exam
     0 & \beta & c_y & 0 \\ 
     0 & 0 & 1 & 0
     \end{bmatrix} P_h
-    \label{eq:homogenous}
+    \label{eq:homogeneous}
 \end{equation}
 
-From this point on, assume that we will work in homogenous coordinates, unless stated otherwise. We will drop the $h$ index, so any point $P$ or $P'$ can be assumed to be in homogenous coordinates. As seen from Equation~\ref{eq:homogenous}, we can represent the relationship between a point in 3D space and its image coordinates by a matrix vector relationship:
+From this point on, assume that we will work in homogeneous coordinates, unless stated otherwise. We will drop the $h$ index, so any point $P$ or $P'$ can be assumed to be in homogeneous coordinates. As seen from Equation~\ref{eq:homogeneous}, we can represent the relationship between a point in 3D space and its image coordinates by a matrix vector relationship:
 \begin{equation}
     P' = \begin{bmatrix}x'\\y'\\ z\end{bmatrix}=\begin{bmatrix}
     \alpha & 0 & c_x & 0\\
@@ -219,7 +219,7 @@ m_1^T \\ m_2^T \\m_3^T
 \label{eq:linearsystem}
 \end{equation}
 
-When $2n > 11$, our homogenous linear system is overdetermined. For such a system $m=0$ is always a trivial solution. Furthemore, even if there were some other $m$ that were a nonzero solution, then $\forall k\in \mathbb{R},km$ is also a solution. Therefore, to constrain our solution, we complete the following minimization:
+When $2n > 11$, our homogeneous linear system is overdetermined. For such a system $m=0$ is always a trivial solution. Furthemore, even if there were some other $m$ that were a nonzero solution, then $\forall k\in \mathbb{R},km$ is also a solution. Therefore, to constrain our solution, we complete the following minimization:
 \begin{equation}
 \begin{aligned}
     & \underset{m}{\text{minimize}}
