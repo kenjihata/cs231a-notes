@@ -148,7 +148,7 @@ This means that if we can recognize the horizon line associated with a plane, an
 \caption{A set of two or more vanishing lines (the blue lines) defines the plane at infinity $\Pi_\infty$ (the yellow plane).}
 \label{fig:plane_infinity}
 \end{figure}
-Before introducing the last property that relates vanishing points and lines, we first need to define the plane at infinity $\Pi_\infty$. This plane is defined by a set of 2 or more vanishing lines and is described by the vector $\begin{bmatrix} 0 & 0 & 0 &1\end{bmatrix}$ in homogeneous coordinates. 
+Before introducing the last property that relates vanishing points and lines, we first need to define the plane at infinity $\Pi_\infty$. This plane is defined by a set of 2 or more vanishing lines and is described by the vector $\begin{bmatrix} 0 & 0 & 0 &1\end{bmatrix}^T$ in homogeneous coordinates. 
 
 \begin{figure}[h!]
 \centering
@@ -161,7 +161,7 @@ The last property we introduce relates lines and planes in 3D with the correspon
 \begin{equation}
     \begin{split}
         \cos\theta &= \frac{d_1 \cdot d_2}{\|d_1\| \|d_2\|}\\
-        &= \frac{v_1^T\omega v_2}{\sqrt{v_1 \omega v_1}\sqrt{v_2 \omega v_2}}
+        &= \frac{v_1^T\omega v_2}{\sqrt{v_1^T \omega v_1}\sqrt{v_2^T \omega v_2}}
     \end{split}
     \label{eq:angles}
 \end{equation}
@@ -171,7 +171,7 @@ We can extend this idea further to the 3D planar case, in which we want to relat
 \begin{equation}
     \begin{split}
         \cos\theta &= \frac{n_1 \cdot n_2}{\|n_1\| \|n_2\|}\\
-        &= \frac{\ell_1^T\omega^{-1} \ell_2}{\sqrt{\ell_1 \omega^{-1} \ell_1}\sqrt{\ell_2 \omega^{-1} \ell_2}}
+        &= \frac{\ell_1^T\omega^{-1} \ell_2}{\sqrt{\ell_1^T \omega^{-1} \ell_1}\sqrt{\ell_2^T \omega^{-1} \ell_2}}
     \end{split}
 \end{equation}
 
