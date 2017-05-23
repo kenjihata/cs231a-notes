@@ -135,7 +135,7 @@ If we consider a plane $\Pi$ as a superset of parallel lines, each set of parall
 \label{fig:horizon}
 \end{figure}
 
-The concept of a horizon line allows us to answer as humans to intuitively deduce properties about the image that may not be easily apparent mathematically. For example, in Figure~\ref{fig:horizon}, although the lines on the ground are not parallel in image coordinates, we have a natural understanding that they are parallel in the 3D world.
+The concept of a horizon line allows us to answer as humans, thereby intuitively deduce properties about the image that may not be easily apparent mathematically. For example, in Figure~\ref{fig:horizon}, although the lines on the ground are not parallel in image coordinates, we have a natural understanding that they are parallel in the 3D world.
 
 Furthermore, the horizon line allows us to compute useful properties about the world. For example, we can derive an interesting relationship between the the normal $n$ of a plane in 3D with the corresponding horizon line $\ell_{\mathrm{horiz}}$ in an image:
 \begin{equation}
@@ -184,14 +184,14 @@ We can extend this idea further to the 3D planar case, in which we want to relat
 \end{figure}
 Suppose that we can identify two planes in an image of the 3D world. Additionally, let's suppose that we can identify a pair of parallel lines on each of these planes. This allows us to estimate two vanishing points $v_1$ and $v_2$ in the image. Finally, let's suppose that we know that these planes are perpendicular in 3D. In this case, we know that from Equation~\ref{eq:angles}, that $v_1\omega v_2 = 0$. 
 
-But recall that $\omega$ depends on the camera matrix $K$, which is potentially unknown at this time. Therefore, is knowing these two vanishing points sufficient for accurately estimating the camera parameters? Considering that $K$ has 5 degrees of freedom and that $v_1 \omega v_2 = 0$ provides only one constraint, we do not have enough information to calculate $K$. 
+But recall that $\omega$ depends on the camera matrix $K$, which is potentially unknown at this time. Therefore, is knowing these two vanishing points sufficient for accurately estimating the camera parameters? Considering that $K$ has 5 degrees of freedom and that $v_1^T \omega v_2 = 0$ provides only one constraint, we do not have enough information to calculate $K$. 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/example2.png}
 \caption{The example setup with three vanishing points for a set of mutually perpendicular planes.}
 \label{fig:example2}
 \end{figure}
-What if we are able to find another vanishing $v_3$ for another mutually orthogonal plane? Then we know that $v_1\omega v_2 = v_1\omega v_3 = v_2\omega v_3 = 0$. Since each pair gives a constraint, we only end up with 3 out of the 5 constraints needed to compute $K$. However, if we make the assumption that the camera has zero-skew and square pixels, then we can add the additional two constraints needed. By these assumptions, then we know that $\omega$ takes on the form 
+What if we are able to find another vanishing point $v_3$ for another mutually orthogonal plane? Then we know that $v_1^T\omega v_2 = v_1^T\omega v_3 = v_2^T\omega v_3 = 0$. Since each pair gives a constraint, we only end up with 3 out of the 5 constraints needed to compute $K$. However, if we make the assumption that the camera has zero-skew and square pixels, then we can add the additional two constraints needed. By these assumptions, then we know that $\omega$ takes on the form 
 \begin{equation}
     \omega = \begin{bmatrix}\omega_1 & 0 & \omega_4 \\ 0 & \omega_1 & \omega_5 \\ \omega_4 & \omega_5 &\omega_6 \end{bmatrix}
 \end{equation}
