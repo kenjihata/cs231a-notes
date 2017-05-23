@@ -88,7 +88,8 @@ Therefore, if we have multiple views, then we can compute visual cones for each 
 \begin{figure}[h!]
     \centering
     \includegraphics[width = 0.8\textwidth]{figures/space_carving.png}
-    \caption{The result of space carving when done on a voxel grid. The region is the reconstructed object after carving from two views, while the shaded part on the inside is the actual object. Notice that the reconstruction is always conservative.}
+    \caption{The result of space carving when done on a voxel grid. The region is the reconstructed object after carving from two views, while the shaded part on the inside is the actual object. Notice that the reconstruction is always 
+    .}
     \label{fig:space_carving}
 \end{figure}
 
@@ -103,7 +104,7 @@ Although the space carving method avoids the correspondence problem and is relat
     \label{fig:concavity}
 \end{figure}
 
-Another limitation is that the efficacy of space carving is dependent on the number of views, the preciseness of the silhouette, and even the shape of the object we are trying to reconstruct. If the number of views is too low, then we end of up with a very loose estimate of the visual hull of the object. As the number of views increases, the more extraneous voxels can be removed by the consistency check. Furthermore, the validity of the consistency check is solely upheld by the fact that we believe that the silhouettes are correct. If the silhouette is too conservative and contains more pixels than necessary, then our carving may not be precise. In a potentially even worse case, the silhouette misses portions of the actual object, resulting in a reconstruction that is overly carved. Finally, a major drawback of space carving is that it is incapable of modeling certain concavities of an object, as shown in Figure~\ref{fig:concavity}.
+Another limitation is that the efficacy of space carving is dependent on the number of views, the preciseness of the silhouette, and even the shape of the object we are trying to reconstruct. If the number of views is too low, then we end of up with a very loose estimate of the visual hull of the object. As the number of views increases, the more extraneous voxels can be removed by the consistency check. Furthermore, the validity of the consistency check is solely upheld by the fact that we believe that the silhouettes are correct. If the silhouette is too conservative and contains more pixels than necessary, then our carving may not be precise. Note that "conservative" here is counterintuitive to what you would expect. In a potentially even worse case, the silhouette misses portions of the actual object, resulting in a reconstruction that is overly carved. Finally, a major drawback of space carving is that it is incapable of modeling certain concavities of an object, as shown in Figure~\ref{fig:concavity}.
 
 \subsection{Shadow carving}
 To circumvent the concavity problem posed by space carving, we need to look to other forms of consistency checks. One important cue for determining the 3D shape of an object that we can use is the presence of \emph{self-shadows}. Self-shadows are the shadows that an object projects on itself. For the case of concave objects, an object will often cast self-shadows in the concave region. 
