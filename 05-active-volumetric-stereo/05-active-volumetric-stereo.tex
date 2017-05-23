@@ -115,7 +115,7 @@ To circumvent the concavity problem posed by space carving, we need to look to o
     \label{fig:shadow_carving}
 \end{figure}
 
-\emph{Shadow carving} at its core augments space carving with the idea of using self-shadows to better estimate the concavities. As shown in Figure~\ref{fig:shadow_carving}, the general setup of shadow carving is very similar to space carving. An object is placed in a turntable that is viewed by a calibrated camera. However, there is an array of lights in known positions around the camera who states can be appropriately turned on and off. These lights will be used to make the object cast self-shadows.
+\emph{Shadow carving} at its core augments space carving with the idea of using self-shadows to better estimate the concavities. As shown in Figure~\ref{fig:shadow_carving}, the general setup of shadow carving is very similar to space carving. An object is placed in a turntable that is viewed by a calibrated camera. However, there is an array of lights in known positions around the camera whose states can be appropriately turned on and off. These lights will be used to make the object cast self-shadows.
 
 \begin{figure}[h!]
     \centering
@@ -126,7 +126,7 @@ To circumvent the concavity problem posed by space carving, we need to look to o
 
 As shown in Figure~\ref{fig:shadow_carving_detailed}, the shadow carving process begins with an initial voxel grid, which is trimmed down by using the same approach as in space carving. However, in each view, we can turn on and off each light in the array surrounding the camera. Each light will produce a different self-shadow on the object. Upon identifying the shadow in the image plane, we can then find the voxels on the surface of our trimmed voxel grid that are in the visual cone of the shadow. These surface voxels allow us to then make a new visual cone with the image source. We then leverage the useful fact that a voxel that is part of both visual cones cannot be part of the object to eliminate voxels in the concavity. 
 
-Like space carving, the runtime of shadow carving is dependent on the resolution of the voxel grid. The runtime scales cubically with the resolution of the voxel grid. However, if there are $N$ lights, then shadow carving takes approximately $N+1$ times longer than space carving, as each voxel needs to be projected into the camera and each of the $N$ lights.
+Like space carving, the runtime of shadow carving is dependent on the resolution of the voxel grid. The runtime scales cubically with the resolution of the voxel grid. However, if there are $N$ lights, then shadow carving takes approximately $N+1$ times longer than space carving, as each voxel needs to be projected into the camera and each of the $N$ lights can be turned on and off.
 
 In summary, shadow carving always produces a conservative volume estimate that better reconstructs 3D shapes with concavities. The quality of the results depends on both the number of views and the number of light sources. Some disadvantages of this approach are that it cannot handle cases where the object contains reflective or low albedo regions. This is because shadows cannot be detected accurately in such conditions.
 
