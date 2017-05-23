@@ -377,7 +377,7 @@ Similar to how the rotation $R$ can take on two potential values, the translatio
 \begin{equation}
     t \times t = [t]_\times t = UZU^T t = 0
 \end{equation}
-Knowing that $U$ is unitary, we can find that the $\|[t]_\times\|_F = \sqrt{2}$. Therefore, our estimate of $t$ from this factorization will From the above equation and the fact that $E$ is known up to scale, this means that 
+Knowing that $U$ is unitary, we can find that the $\|[t]_\times\|F = \sqrt{2}$. Therefore, our estimate of $t$ from this factorization will come from the above equation and the fact that $E$ is known up to scale. This means that 
 \begin{equation}
     t = \pm U\begin{bmatrix}0\\0\\1\end{bmatrix} = \pm u_3
 \end{equation}
@@ -393,7 +393,7 @@ where $u_3$ is the third column of $U$. By inspection, we can also verify that w
 As illustrated in Figure~\ref{fig:four_rt}, there are four potential $R,t$ pairings since there exists two options for both $R$ and $t$. Intuitively, the four pairings include all possible pairings of rotating a camera in a certain direction or rotating the camera in the opposite direction combined with the option of translating it in a certain direction or the opposite direction. Therefore, under ideal conditions, we would only need to triangulate one point to determine the correct $R,t$ pair. For the correct $R,t$ pair, the triangulated point $\hat{P}$ exists in front of both cameras, which means that it has a positive $z$-coordinate with respect to both camera reference systems. Due to measurement noise, we often do not rely on triangulating only one point, but will instead triangulate many points and determine the correct $R,t$ pair as the one that contains the most of these points in front of both cameras.
 
 \section{An example structure from motion pipeline}
-After finding the relative motion matrices $M_i$, we can use them to determine the world coordinates of the points $X_j$. In the case of the algebraic method, the estimate of such points will be correct up the perspective transformation $H$. In the extracting the camera matrices from the Essential matrix, the estimates can be known up to scale. In both cases, the 3D points can be computed from the estimated camera matrices via the triangulation methods described earlier.
+After finding the relative motion matrices $M_i$, we can use them to determine the world coordinates of the points $X_j$. In the case of the algebraic method, the estimate of such points will be correct up to the perspective transformation $H$. In extracting the camera matrices from the Essential matrix, the estimates can be known up to scale. In both cases, the 3D points can be computed from the estimated camera matrices via the triangulation methods described earlier.
 
 The extension to the multi-view case can be done by chaining pairwise cameras. We can use the algebraic approach or the Essential matrix to obtain solutions for the camera matrices and the 3D points for any pair of cameras, provided that there are enough point correspondences. The reconstructed 3D points are associated to the point correspondences available between the camera pair. Those pairwise solutions may be combined together (optimized) in a approach called bundle adjustment as we will see next.
 
