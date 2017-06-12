@@ -27,7 +27,7 @@ To better understand how we can learn from images, we should be able to first kn
 \begin{equation*}
     \begin{bmatrix}x'\\y'\\1\end{bmatrix} = \begin{bmatrix}R & t\\ 0 & 1\end{bmatrix}\begin{bmatrix}x\\y\\1\end{bmatrix}
 \end{equation*}
-where $\begin{bmatrix}x'&y'&1\end{bmatrix}^T$ is the point achieved after the isometric transformation. 
+where $\begin{bmatrix}x'&y'&1\end{bmatrix}^T$ is the point achieved after the isometric transformation. A useful property of rotation matrices is that $RR^T = I$, which can be used to quickly check if a matrix is a rotation.
 
 \emph{Similarity transformations} are transformations that preserve shape. Intuitively, they can do everything that isometric transformations can plus scaling. Mathematically, they are denoted as 
 \begin{equation*}
@@ -88,7 +88,7 @@ Thus, we confirmed our intuition that two parallel lines intersect at infinity. 
 \label{fig:line_infinity}
 \end{figure}
 
-The concept of points of infinity can be extended to define \emph{lines at infinity}. Consider two or more pairs of parallel lines. Each pair of parallel lines intersects at a point at infinity $\{x_{\infty,1},...,x_{\infty,n}\}$.The line $\ell_\infty$ that passes through all these points at infinity must satisfy $\forall i, \ell_\infty^T x_{\infty,i}= 0$. This means that $\ell_\infty = \begin{bmatrix}0 & 0 & c\end{bmatrix}^T$. Since $c$ is an arbitrary value, we can simple define $\ell_\infty = \begin{bmatrix}0 & 0 & 1\end{bmatrix}^T$.
+The concept of points of infinity can be extended to define \emph{lines at infinity}. Consider two or more pairs of parallel lines. Each pair of parallel lines intersects at a point at infinity $\{x_{\infty,1},...,x_{\infty,n}\}$. The line $\ell_\infty$ that passes through all these points at infinity must satisfy $\forall i, \ell_\infty^T x_{\infty,i}= 0$. This means that $\ell_\infty = \begin{bmatrix}0 & 0 & c\end{bmatrix}^T$. Since $c$ is an arbitrary value, we can simple define $\ell_\infty = \begin{bmatrix}0 & 0 & 1\end{bmatrix}^T$.
 
 If we apply a generic projective transformation $H$ to a point at infinity $p_\infty$, what will happen? 
 \begin{equation}

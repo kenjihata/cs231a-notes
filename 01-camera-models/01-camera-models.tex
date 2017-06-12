@@ -39,13 +39,13 @@ Now, how do we use pinhole cameras? Let $P = \begin{bmatrix}x & y & z\end{bmatri
 
 Here, we can define a coordinate system $\begin{bmatrix}i & j & k\end{bmatrix}$ centered at the pinhole $O$ such that the axis $k$ is perpendicular to the image plane and points toward it. This coordinate system is often known as the \emph{camera reference system} or \emph{camera coordinate system}. The line defined by $C'$ and $O$ is called the \emph{optical axis} of the camera system.
 
-Recall that point $P'$ is derived from the projection of 3D point $P$ on the image plane $\Pi'$. Therefore, if we derive the relationship between 3D point $P$ and image plane point $P'$, we can understand how the 3D world imprints itself upon the image taken by a pinhole camera. Notice that triangle $P'C'O$ is similar to the triangle formed by $P$, $O$ and $(0,0,z)$. Therefore, using the law of similar triangles we find that 
+Recall that point $P'$ is derived from the projection of 3D point $P$ on the image plane $\Pi'$. Therefore, if we derive the relationship between 3D point $P$ and image plane point $P'$, we can understand how the 3D world imprints itself upon the image taken by a pinhole camera. Notice that triangle $P'C'O$ is similar to the triangle formed by $P$, $O$ and $(0,0,z)$. Therefore, using the law of similar triangles we find that:
 
 \begin{equation}
     P' = \begin{bmatrix}x'&y'\end{bmatrix}^T = \begin{bmatrix}f\frac{x}{z} & f\frac{y}{z}\end{bmatrix}^T
 \end{equation}
 
-Notice that one large assumption we make in this pinhole model is that the aperture is a single point. In most real world scenarios, however, we cannot assume the aperture can be infinitely small. Thus, what is the effect of aperture size? 
+Notice that one large assumption we make in this pinhole model is that the aperture is a single point. In most real world scenarios, however, we cannot assume the aperture can be infinitely small. Thus, what is the effect of varying aperture size? 
 
 \begin{figure}[h!]
 \centering
@@ -95,22 +95,29 @@ In this section, we will discuss the details of the parameters we must account f
 
 As discussed earlier, a point $P$ in 3D space can be mapped (or projected) into a 2D point $P'$ in the image plane $\Pi'$. This $\mathbb{R}^3 \rightarrow \mathbb{R}^2$ mapping is referred to as a \emph{projective transformation}. This projection of 3D points into the image plane does not directly correspond to what we see in actual digital images for several reasons. First, points in the digital images are, in general, in a different reference system than those in the image plane. Second, digital images are divided into discrete pixels, whereas points in the image plane are continuous. Finally, the physical sensors can introduce non-linearity such as distortion to the mapping. To account for these differences, we will introduce a number of additional transformations that allow us to map any point from the 3D world to pixel coordinates.
 
-Image coordinates have their origin $C'$ at the image center where the $k$ axis intersects the image plane. On the other hand, digital images typically have their origin at the lower-left corner of the image. Thus, 2D points in the image plane and 2D points in the image are offset by a translation vector $\begin{bmatrix}c_x, c_y\end{bmatrix}^T$. To accommodate this change of coordinate systems, the mapping now becomes:
+\subsection{The Camera Matrix Model and Homogeneous Coordinates}
+
+\subsubsection{Introduction to the Camera Matrix Model}
+The camera matrix model describes a set of important parameters that affect how a world point $P$ is mapped to image coordinates $P'$. As the name suggests, these parameters will be represented in matrix form. First, let's introduce some of those parameters.
+
+The first parameters, $c_x$ and $c_y$, describe how image plane and digital image coordinates can differ by a translation. Image plane coordinates have their origin $C'$ at the image center where the $k$ axis intersects the image plane. On the other hand, digital image coordinates typically have their origin at the lower-left corner of the image. Thus, 2D points in the image plane and 2D points in the image are offset by a translation vector $\begin{bmatrix}c_x, c_y\end{bmatrix}^T$. To accommodate this change of coordinate systems, the mapping now becomes:
 
 \begin{equation}
     P' = \begin{bmatrix}x'\\y'\end{bmatrix} = \begin{bmatrix}f\frac{x}{z}+c_x \\ f\frac{y}{z}+c_y\end{bmatrix}
 \end{equation}
 
-The next effect we must account for that the points in digital images are expressed in pixels, while points in image plane are represented in physical measurements (e.g. centimeters). In order to accommodate this change of units, we must introduce two new parameters $k$ and $l$. These parameters, whose units would be something like $\frac{\mathrm{pixels}}{\mathrm{cm}}$, correspond to the change of units in the two axes of the image plane. Note that $k$ and $l$ may be different because the aspect ratio of the unit element is not guaranteed to be one. If $k=l$, we often say that the camera has \emph{square pixels}. We adjust our previous mapping to be
+The second effect we must account for that the points in digital images are expressed in pixels, while points in image plane are represented in physical measurements (e.g. centimeters). In order to accommodate this change of units, we must introduce two new parameters $k$ and $l$. These parameters, whose units would be something like $\frac{\mathrm{pixels}}{\mathrm{cm}}$, correspond to the change of units in the two axes of the image plane. Note that $k$ and $l$ may be different because the aspect ratio of a pixel is not guaranteed to be one. If $k=l$, we often say that the camera has \emph{square pixels}. We adjust our previous mapping to be
 
 \begin{equation}
     P' = \begin{bmatrix}x'\\y'\end{bmatrix} = \begin{bmatrix}fk\frac{x}{z}+c_x \\ fl\frac{y}{z}+c_y\end{bmatrix} = \begin{bmatrix}\alpha\frac{x}{z}+c_x \\ \beta\frac{y}{z}+c_y\end{bmatrix}
     \label{eq:finalImage}
 \end{equation}
 
-Is there a better way to represent this projection from $P\rightarrow P'$? If this projection is a linear transformation, then it can be represented as a product of a matrix and the input vector (in this case, it would be $P$. However, from Equation~\ref{eq:finalImage}, we see that this projection $P\rightarrow P'$ is not linear, as the operation divides one of the input parameters (namely $z$). Still, representing this projection as a matrix-vector product would be useful for future derivations. Therefore, can we represent our transformation as a matrix-vector product despite its nonlinearity?
+Is there a better way to represent this projection from $P\rightarrow P'$? If this projection is a linear transformation, then it can be represented as a product of a matrix and the input vector (in this case, it would be $P$. However, from Equation~\ref{eq:finalImage}, we see that this projection $P\rightarrow P'$ is not linear, as the operation divides one of the input parameters (namely $z$). Still, representing this projection as a matrix-vector product would be useful for future derivations. Therefore, can we represent our transformation as a matrix-vector product despite its nonlinearity? Homogeneous coordinates are the solution.
 
-One way to get around this problem is to change the coordinate systems. For example, we introduce a new coordinate, such that any point $P' =(x',y')$ becomes $(x',y',1)$. Similarly, any point $P =(x,y,z)$ becomes $(x,y,z,1)$. This augmented space is referred to as the \emph{homogeneous coordinate system}. As demonstrated previously, to convert some Euclidean vector $(v_1,...,v_n)$ to homogeneous coordinates, we simply append a 1 in a new dimension to get $(v_1,...,v_n,1)$. Note that the equality between a vector and its homogeneous coordinates only occurs when the final coordinate equals one. Therefore, when converting back from arbitrary homogeneous coordinates $(v_1,  ... , v_n , w)$, we get Euclidean coordinates $(\frac{v_1}{w},...,\frac{v_n}{w})$. Using homogeneous coordinates, we can formulate
+\subsubsection{Homogeneous Coordinates}
+
+One way to solve this problem is to change the coordinate systems. For example, we introduce a new coordinate, such that any point $P' =(x',y')$ becomes $(x',y',1)$. Similarly, any point $P =(x,y,z)$ becomes $(x,y,z,1)$. This augmented space is referred to as the \emph{homogeneous coordinate system}. As demonstrated previously, to convert a Euclidean vector $(v_1,...,v_n)$ to homogeneous coordinates, we simply append a 1 in a new dimension to get $(v_1,...,v_n,1)$. Note that the equality between a vector and its homogeneous coordinates only occurs when the final coordinate equals one. Therefore, when converting back from arbitrary homogeneous coordinates $(v_1,  ... , v_n , w)$, we get Euclidean coordinates $(\frac{v_1}{w},...,\frac{v_n}{w})$. Using homogeneous coordinates, we can formulate
 \begin{equation}
     P_h' = \begin{bmatrix}\alpha x + c_xz\\\beta y + c_yz \\ z\end{bmatrix} = 
     \begin{bmatrix}
@@ -150,7 +157,12 @@ P' = MP = \begin{bmatrix}
     \end{bmatrix}\begin{bmatrix}I & 0\end{bmatrix}P = K\begin{bmatrix}I & 0\end{bmatrix}P
     \label{eq:decomposedHomogenousTransform}
 \end{equation}
-The matrix $K$ is often referred to as the \emph{camera matrix}. This matrix contains some of the critical parameters that are useful to characterize a camera model. Two parameters are currently missing from our formulation: \emph{skewness} and \emph{distortion}. We often say that an image is skewed when the camera coordinate system is skewed. In this case, the angle between the two axes are slightly larger or smaller than 90 degrees. Most cameras have zero-skew, but some degree of skewness may occur because of sensor manufacturing errors. Deriving the new camera matrix accounting for skewness is outside the scope of this class and we give it to you below:
+
+The matrix $K$ is often referred to as the \emph{camera matrix}. 
+
+\subsubsection{The Complete Camera Matrix Model}
+
+The camera matrix $K$ contains some of the critical parameters that describes a camera's characteristics and its model, including the $c_x, c_y, k,$ and $l$ parameters as discussed above. Two parameters are currently missing this formulation: \emph{skewness} and \emph{distortion}. We often say that an image is skewed when the camera coordinate system is skewed, meaning that the angle between the two axes is slightly larger or smaller than 90 degrees. Most cameras have zero-skew, but some degree of skewness may occur because of sensor manufacturing errors. Deriving the new camera matrix accounting for skewness is outside the scope of this class and we give it to you below:
 \begin{equation}
 K = \begin{bmatrix}x'\\y'\\ z\end{bmatrix}=\begin{bmatrix}
     \alpha & -\alpha\cot\theta & c_x \\
@@ -158,9 +170,11 @@ K = \begin{bmatrix}x'\\y'\\ z\end{bmatrix}=\begin{bmatrix}
     0 & 0 & 1 
     \end{bmatrix}
 \end{equation}
-Most methods that we introduce in this class ignore distortion effects. Therefore, our final camera matrix has 5 degrees of freedom: 2 for focal length, 2 for offset, and 1 for skewness. 
+Most methods that we introduce in this class ignore distortion effects, therefore our class camera matrix $K$ has 5 degrees of freedom: 2 for focal length, 2 for offset, and 1 for skewness. These parameters are collectively known as the \emph{intrinsic parameters}, as they are unique and inherent to a given camera and relate to essential properties of the camera, such as its manufacturing.
 
-So far, we have described a mapping between a point $P$ in the 3D camera reference system to a point $P'$ in the 2D image plane. But what if the information about the 3D world is available in a different coordinate system? Then, we need to include an additional transformation that relates points from the world reference system to the camera reference system. This transformation is captured by a rotation matrix $R$ and translation vector $T$. Therefore, given a point in a world reference system $P_w$, we can compute its camera coordinates as follows:
+\subsection{Extrinsic Parameters}
+
+So far, we have described a mapping between a point $P$ in the 3D camera reference system to a point $P'$ in the 2D image plane using the intrinsic parameters of a camera described in matrix form. But what if the information about the 3D world is available in a different coordinate system? Then, we need to include an additional transformation that relates points from the world reference system to the camera reference system. This transformation is captured by a rotation matrix $R$ and translation vector $T$. Therefore, given a point in a world reference system $P_w$, we can compute its camera coordinates as follows:
 \begin{equation}
 P = \begin{bmatrix}R&T\\0&1\end{bmatrix} P_w
 \end{equation}
@@ -170,7 +184,11 @@ P' = K\begin{bmatrix}R&T\end{bmatrix}P_w = MP_w
 \label{eq:cameramatrix}
 \end{equation}
 
-This completes the mapping from a 3D point $P$ in an arbitrary world reference system to the image plane. We see that the projection matrix $M$ consists of two types of parameters: \emph{intrinsic} and \emph{extrinsic} parameters. All parameters contained in the camera matrix $K$ are the intrinsic parameters, which change as the type of camera changes. The extrinsic paramters include the rotation and translation, which do not depend on the camera's build. Overall, we find that the $3\times4$ projection matrix $M$ has 11 degrees of freedom: 5 from the intrinsic camera matrix, 3 from extrinsic rotation, and 3 from extrinsic translation.
+These parameters $R$ and $T$ are known as the \emph{extrinsic parameters} because they are external to and do not depend on the camera.
+
+\vspace{12pt}
+
+This completes the mapping from a 3D point $P$ in an arbitrary world reference system to the image plane. To reiterate, we see that the full projection matrix $M$ consists of the two types of parameters introduced above: \emph{intrinsic} and \emph{extrinsic} parameters. All parameters contained in the camera matrix $K$ are the intrinsic parameters, which change as the type of camera changes. The extrinsic paramters include the rotation and translation, which do not depend on the camera's build. Overall, we find that the $3\times4$ projection matrix $M$ has 11 degrees of freedom: 5 from the intrinsic camera matrix, 3 from extrinsic rotation, and 3 from extrinsic translation.
 
 \section{Camera Calibration}
 To precisely know the transformation from the real, 3D world into digital images requires prior knowledge of many of the camera's intrinsic parameters. If given an arbitrary camera, we may or may not have access to these parameters. We do, however, have access to the images the camera takes. Therefore, can we find a way to deduce them from images? This problem of estimating the extrinsic and intrinsic camera parameters is known as \emph{camera calibration}.
