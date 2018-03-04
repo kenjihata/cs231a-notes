@@ -164,7 +164,7 @@ The matrix $K$ is often referred to as the \emph{camera matrix}.
 
 The camera matrix $K$ contains some of the critical parameters that describes a camera's characteristics and its model, including the $c_x, c_y, k,$ and $l$ parameters as discussed above. Two parameters are currently missing this formulation: \emph{skewness} and \emph{distortion}. We often say that an image is skewed when the camera coordinate system is skewed, meaning that the angle between the two axes is slightly larger or smaller than 90 degrees. Most cameras have zero-skew, but some degree of skewness may occur because of sensor manufacturing errors. Deriving the new camera matrix accounting for skewness is outside the scope of this class and we give it to you below:
 \begin{equation}
-K = \begin{bmatrix}x'\\y'\\ z\end{bmatrix}=\begin{bmatrix}
+K = \begin{bmatrix}
     \alpha & -\alpha\cot\theta & c_x \\
     0 & \frac{\beta}{\sin\theta} & c_y  \\ 
     0 & 0 & 1 
