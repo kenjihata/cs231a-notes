@@ -1,0 +1,269 @@
+\documentclass{article}
+
+% Packages
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsfonts}
+\usepackage{mathtools} % Required for comments inside equations (Required for display matrices. Extension on top of amsmath package.)
+\usepackage{amsmath}
+\usepackage{bm} % for rendering vectors correctly
+\usepackage{xcolor} % for displaying color
+\usepackage{dashrule} % for dashes
+\usepackage{physics} % for norm symbol
+\usepackage{todonotes}
+
+\title{CS231A Course Notes 0}
+\author{Ashish Jain}
+\date{March 2023}
+
+% Commands
+\newcommand{\mathvecr}[1]{$\bm{#1}$}
+\newcommand{\mathmatr}[1]{$\mathbf{#1}$} % undergraduate algebra version
+\newcommand{\vecr}[1]{\bm{#1}}
+\newcommand{\matr}[1]{\mathbf{#1}} % undergraduate algebra version
+\newcommand{\transpose}[1]{#1^\top}
+\newcommand{\cogoline}[1]{$\mathsf{#1}$}
+\newcommand{\cogoslope}[1]{$\mathsf{#1}$}
+\newcommand{\cogopoint}[1]{$\mathtt{#1}$}
+\newcommand{\at}[2][]{#1|_{#2}} % derivative at a particular point
+
+\newcommand{\eqncomment}[1]{
+\footnotesize
+\textcolor{gray}{
+\begin{pmatrix*}[l]
+\text{#1}
+\end{pmatrix*}
+}}
+\newcommand{\longeqncomment}[2]
+{\footnotesize
+\textcolor{gray}{
+\begin{pmatrix*}[l]
+\text{#1} \\
+\text{#2}
+\end{pmatrix*}
+}}
+
+% Math operators
+\DeclareMathOperator{\svd}{svd}
+
+\begin{document}
+
+\maketitle
+
+\section{Homogeneous Coordinates}
+\subsection{Projective Geometry}
+Geometry has its roots in ancient Egypt and Babylonia, where empirical knowledge was acquired through the experience of surveyors, architects, and builders. Later, Greek geometers explored the logical connections between geometric facts, and derived a number of theorems using deduction from a small set of axioms, and the same is codified in Euclid's Elements \cite{wiki:Euclid's_Elements}. Euclidean geometry is interesting because it is closely related to the space we experience in everyday life.
+
+However, a few hundred years ago, interest developed in capturing the 3D scene on a canvas more realistically, and this gave rise to the field of perspective geometry. The word perspective comes from the Medieval Latin words ``per" (meaning ``through") and ``specere" (meaning ``to look at"). Put simply, the theory of perspective considers the artist's canvas as if it were a clear screen. The artist paints while looking through this screen from a fixed position, as if she is viewing the scene she is painting from a particular vantage point. Projective geometry, then, is the study of the properties of figures which are left unchanged by projections.
+
+There are several ways in which we can study projective geometry. The first approach is called the synthetic approach, and is in line with proofs similar to those found in Euclid's Elements wherein we argue directly about geometric entities such as points and lines, and the geometrical relationships between them. The second approach is the coordinate or analytical approach which allows us to prove theorems more easily compared to the synthetic approach. It was introduced by Descartes wherein points, lines and other geometrical entities are represented by sets of coordinates. The third approach to studying projective geometry is based on axioms and networks of formal relations between those axioms. We will primarily concern ourselves with the analytical approach as part of this course.
+
+In 1872, Felix Klein introduced the Erlangen program which from our standpoint introduced euclidean geometry as a subset of affine geometry, and affine geometry as a subset of projective geometry \cite{wiki:Erlangen_program}. Projective geometry is not only more general but more symmetrical than euclidean geometry, and when we use homogeneous coordinates, the algebra for projective geometry becomes linear \cite{semple1952}.
+
+\subsection{Why homogeneous coordinates and what are homogeneous coordinates?}
+Let us start by talking about homogeneous coordinates in the euclidean plane. In Euclid's system, we often distinguish between different cases, for example, tangency and parallelism. Once we applied algebra to geometry, it allowed geometers to treat certain cases uniformly. For example, we could start treating the intersection of a line with a circle (or any other conic) using real or complex points. In other words, a secant can cut a circle in two distinct points, a tangent in two coincident points (two coincident points because we can interpret a tangent as the limiting case of a chord in which one of the points of intersection tends towards coincidence with the other), and a line that does not touch the circle intersects it in two conjugate complex points \cite{semple1952}. Therefore, we can now state for example that every line intersects a circle in two points.
+
+Let us now talk about the intersection of two lines. In Euclid's system, there are two types of line-pairs in the plane: intersecting lines and parallel lines. If \cogoline{l} and \cogoline{m} are two intersecting lines, and we rotate say \cogoline{l} about a point \cogopoint{A} on the line \cogoline{l}, and as we do, the point of intersection between lines \cogoline{l} and m moves further and further away until it disappears altogether. If we rotate \cogoline{l} further, then the point of intersection reappears on the other side and moves along \cogoline{m} towards \cogopoint{A}. Therefore, as a figure of speech, we can say that parallel lines meet at a point at infinity. Now, let's say that the point at infinity has a direction, and if we club together the various points at infinity, and call it as a line at infinity, we can say that any two distinct lines meet at a unique point. Furthermore, we can say that a unique line passes through any two distinct points.
+
+Let us now consider how we can represent these points at infinity algebraically. For two lines, $a_1x+b_1y+c=0$ and $a_2x+b_2y+c=0$, we can determine whether the two lines meet or not by computing the determinant $a_1b_2 - a_2b_1$. However, we would like to capture the intersection of parallel lines as well. Observe, whether or not the two lines are parallel, the ratio $b_1c_2 - b_2c_1:c_1a_2 - c_2a_1:a_1b_2 - a_2b_1$ is always determinate, that is, at least one of the quantities is different from zero. Taking inspiration from this observation, if we now represent any point in euclidean coordinates say $(X, Y)$ by a triad of homogeneous coordinates $(x, y, z)$ then we can go from homogeneous coordinates $(x, y, z)$ back to euclidean coordinates by using equations \ref{eqn:HomogeneousToEuclideanX} and \ref{eqn:HomogeneousToEuclideanY}.
+
+\begin{flalign}
+X &= x/z \label{eqn:HomogeneousToEuclideanX} \\
+Y &= y/z \label{eqn:HomogeneousToEuclideanY}
+\end{flalign}
+
+As you can observe from equations \ref{eqn:HomogeneousToEuclideanX} and \ref{eqn:HomogeneousToEuclideanY}, proportional triads in homogeneous coordinates shall always represent the same point in euclidean coordinates for example $(10,10,1)$, $(20,20,2)$, $(1,1,0.1)$, et cetera. However, we need to also talk about the special triad $(0,0,0)$. We will always exclude this special triad from homogeneous coordinates.
+
+Let us now talk about how points in the Euclidean space and points at infinity are represented in homogeneous coordinates. Clearly, for any triad $(x, y, z)$ where $z\neq0$ maps to a point in euclidean space. Any triad $(x, y, z)$ where $z=0$ represents a point at infinity. Taking this further, if we consider all triads where $z=0$, we get the line at infinity which contains every point at infinity.
+
+Observe that if a point \cogopoint{P} $(X,Y)$ in the euclidean plane $E_2$ is given then the homogeneous coordinates of the point are not uniquely determined. In fact, if $(x_1, y_1, z_1)$ are homogeneous coordinates of a valid point in euclidean space then $(kx_1, ky_1, kz_1)$ are also homogeneous coordinates of \cogopoint{P}. On the other hand, if $(x_1, y_1, z_1)$ in homogeneous coordinates is given then its rectangular coordinates is uniquely determined.
+
+\subsection{Intuition} \label{sec:intuition}
+Thus far, homogeneous coordinates feel very much like a very abstract system which we apply mechanically. However, that's far from the case. Imagine our homogeneous coordinates corresponding to a euclidean plane $E_2$ as a 3D euclidean space where all lines and all planes pass through the origin. In such a framework, the euclidean plane $E_2$ corresponding to our homogeneous coordinates is a plane at $z=1$ in our 3-space, and the aforementioned line at infinity is actually the plane $z=0$ \cite{wildberger2011projective} \cite{stachniss_homogeneous_coordinates}.
+
+\subsection{Entities in euclidean space in homogeneous coordinates}
+Consider a line $aX+bY+c=0$ in euclidean $E_2$ space. In homogeneous coordinates, the equation of the line becomes $ax+by+cz=0$. Geometrically, in corresponding $E_3$ homogeneous coordinate space, you can think of the line $aX+bY+c=0$ as the intersection of the planes represented by $ax+by+cz=0$ and the plane $z=1$.
+
+Also, observe that the equation of the line in homogeneous coordinates is always homogeneous i.e. all the terms in the homogeneous coordinate equation have the same total degree in the variables belonging to the set $\{x,y,z\}$ .
+Similarly, the general equation of a conic in rectangular coordinates as shown in equation \ref{eqn:euclidean_conic} becomes homogeneous as shown in equation \ref{eqn:homogeneous_conic}. It is this homogeneous property of homogeneous coordinates that lends it its name \cite{wylie2008}.
+
+\begin{flalign}
+a_{11}x^2+2a_{12}xy+a_{22}y^2+2a_{13}x+2a_{23}y+a_{33}&=0 \label{eqn:euclidean_conic} \\ 
+a_{11}x^2+2a_{12}xy+a_{22}y^2+2a_{13}xz+2a_{23}yz+a_{33}z^2&=0 \label{eqn:homogeneous_conic} 
+\end{flalign}
+
+Let us now see how a point in euclidean $E_2$ space can be represented in homogeneous coordinates. Consider a point \cogopoint{P} $(X,Y)$ in euclidean space then the line from the origin $(0,0,0)$ to the point $(X,Y,1)$ on the plane $z=1$ in homogeneous coordinates will represent the point \cogopoint{P} in euclidean space. Any 3-space point in homogeneous coordinates on the line will map to \cogopoint{P}. Points in euclidean $E_2$ space can also be represented as the intersection of two lines in $E_2$ space. However, lines in euclidean space map to planes in homogeneous coordinates. Therefore, the intersection of two non-parallel planes in homogeneous coordinates in 3-space will result in a line in euclidean $E_2$ space. Note, that the planes in homogeneous coordinates will pass through the origin, therefore, they will always intersect in 3-space, and therefore, we can never have two distinct parallel planes in homogeneous coordinate 3-space. We can find the intersection of two planes by computing the cross-product of their normals. Note, this merely gives us the direction. However, we know that all lines in homogeneous coordinates pass through the origin as mention in section \ref{sec:intuition}. Therefore, if we draw a ray from the origin along the direction of the computed cross-product, we will get our desired point. Let us now talk about parallel lines in euclidean $E_2$ space. Consider, two parallel lines namely $Y=0$ and $Y=1$. The corresponding planes in homogeneous coordinates 3-space both pass through the origin, and their cross-product will pass through the plane $z=0$. Note, if we draw the ray from the origin along the computed vector, we will get our desired point in homogeneous coordinates which is a point at infinity.
+
+\subsection{Duality}
+Rather than treating points as primary entities, and lines as sets of points, let us now treat lines as primary entities. In this framework, we can define points in terms of lines as a point is defined by the complete set of lines that pass through it, such that every point becomes the envelope of a variable line. Consider a line $ux + vy + wz=0$ in the original homogeneous coordinate system, if we fix $(x,y,z)$ and vary $(u,v,w)$ then $(u_1,v_1,w_1)$ which satisfies $ux + vy + wz=0$ can be considered its homogeneous coordinates of some line \cogoline{l_1} in homogeneous line-coordinates just as $(x,y,z)$ are considered homogeneous point-coordinates of a point \cogopoint{P}.
+
+In our regular homogeneous point-coordinate system, $(u,v,w)$ are fixed and we vary the points $(x,y,z)$. However, if we fix $(x,y,z$ in our alternate homogeneous line-coordinate system then the equation is describing lines which pass through the point $(x,y,z)$. The hough space concept refers to this idea as well if you have encountered that concept before. In short, there is completely duality between the representation of points and lines in terms of point-coordinates, on the one hand, and the representation of lines and points in terms of line-coordinates, on the other \cite{semple1952}.
+
+\subsection{Higher dimensions}
+We have thus far talked about euclidean $E_2$ space, and corresponding 3-space homogeneous coordinates. However, homogeneous coordinates are not limited to euclidean $E_2$ space, and can be extended to higher dimensional euclidean spaces as well in a similar manner to euclidean $E_2$ space.
+
+\section{Solving Linear Systems}
+A system of linear equations (or linear system) is a collection of one or more linear equations involving the same variables \cite{wiki:systemoflinearequations}. In this section, we will cover techniques from linear algebra that are essential for solving linear systems.
+
+\subsection{Heterogeneous Linear Systems}
+Let's start by reviewing how we can solve heterogeneous linear systems such as in equation \ref{eqn:heterogeneouslinearsystem} where \mathmatr{A} is a matrix with size $(m \times n)$, \mathvecr{x} is a column vector of size $(n \times 1)$ and \mathvecr{b} is a column vector of size $(m \times 1)$. By heterogeneous, we mean linear systems whose right-hand side is a non-zero vector. A tuple $(s_1,s_2, ...,s_n)$ of numbers that makes each equation in the system true when the values $(s_1,s_2, ...,s_n)$ are substituted for $(x_1, x_2, ..., x_n)$ respectively.
+
+\begin{flalign}
+\matr{A}\vecr{x} &= \vecr{b} & \hfill \eqncomment{\mathvecr{b} is non-zero} \label{eqn:heterogeneouslinearsystem}
+\end{flalign}
+
+The number of solutions which satisfy the equation depend on the sizes of the quantities involved. We can divide the possibilities into three cases:
+
+\begin{enumerate}
+    \item If $m < n$, then, we say the heterogeneous linear system is undetermined. In this case, the number of constraints is lesser than the number of unknowns. As a result, the linear system will have an infinite number of solutions.
+    \item If $m = n$ and matrix \mathmatr{A} is invertible, then the number of constraints is exactly as many unknowns. However, if \mathmatr{A} is not invertible, then, the system has an infinite number of solutions.
+    \item If $m > n$, then, we say the heterogeneous linear system is overdetermined. In this case, the number of constraints is more than the number of unknowns. The system will have no solution if the constraints are linearly independent. In such cases, we convert the heterogeneous linear system to an optimization problem of the form $\norm{\matr{A}\vecr{x} - \vecr{b}}^2$, and try to find a least squares solution.
+\end{enumerate}
+
+\subsubsection{Overdetermined Heterogenous Linear System}
+Let's now see how we can solve the optimization problem. Let the loss function be $L = \norm{\matr{A}\vecr{x} - \vecr{b}}^2$. If we expand our loss function, we get:
+
+\begin{flalign}
+L &= \transpose{\vecr{x}}(\transpose{\matr{A}}\matr{A})\vecr{x} - 2\vecr{x}(\transpose{\matr{A}}\vecr{b}) + \norm{\vecr{b}}^2 \nonumber
+\end{flalign}
+
+Let's now take the derivative of the loss function with respect to $\vecr{x}$:
+
+\begin{flalign}
+\frac{\partial L}{\partial \vecr{x}} &= 2(\transpose{\matr{A}}\matr{A})\vecr{x} - 2(\transpose{\matr{A}}\vecr{b}) \nonumber
+\end{flalign}
+
+To find the optimal solution in the least squares sense, we will set the derivative to zero:
+
+\begin{flalign}
+& \frac{\partial L}{\partial \vecr{x}} = 0 \nonumber \\
+\implies & 2(\transpose{\matr{A}}\matr{A})\vecr{x} - 2(\transpose{\matr{A}}\vecr{b}) = 0 \nonumber \\
+\implies & (\transpose{\matr{A}}\matr{A})\vecr{x} = \transpose{\matr{A}}\vecr{b} \nonumber \\
+\implies & \vecr{x} = (\transpose{\matr{A}}\matr{A})^{-1} \transpose{\matr{A}}\vecr{b} \label{eqn:heterogeneous linear system solution}
+\end{flalign}
+
+The matrix $(\transpose{\matr{A}}\matr{A})^{-1} \transpose{\matr{A}}$ is called the pseudoinverse of the original $(m \times n)$ matrix \mathmatr{A}. Cases:
+
+\begin{itemize}
+\item If $m=n$, then, $(\transpose{\matr{A}}\matr{A})^{-1} \transpose{\matr{A}} = \matr{A}^{-1}$
+\item If $m>n$, then, $\transpose{\matr{A}}\matr{A}$ of shape $(n \times n)$ is typically invertible, and therefore, we can determine the solution to our overdetermined heterogeneous linear system.
+\end{itemize}
+
+\subsection{Homogeneous Linear Systems}
+Let's start by reviewing how we can solve homogeneous linear systems such as in equation \ref{eqn:homogeneouslinearsystem} where \mathmatr{A} is a matrix with size $(m \times n)$, \mathvecr{x} is a column vector of size $(n \times 1)$ and \mathvecr{0} is a column vector of size $(m \times 1)$. Observe that the n-tuple $(0,0, ...,0)$ is a valid trivial solution. For homogeneous linear systems, we are typically not interested in the trivial solution as it is typically not useful for our use cases.
+
+\begin{flalign}
+\matr{A}\vecr{x} &= \vecr{0} & \hfill\label{eqn:homogeneouslinearsystem}
+\end{flalign}
+
+We will again try to solve the homogeneous linear system by converting it to an optimization problem. However, given we are not interested in the trivial solution, we will add an additional constraint $\vecr{x}:\norm{\vecr{x}}^2 = 1$ to search only among vectors whose length is equal to 1. The converted optimization problem is shown in equation \ref{eqn:homogeneouslinearsystem as optimization problem}.
+
+\begin{flalign}
+\underset{\vecr{x}:\norm{\vecr{x}}^2 = 1}{\min} \norm{\matr{A}\vecr{x}}^2 & \hfill\label{eqn:homogeneouslinearsystem as optimization problem}
+\end{flalign}
+
+Now, given this is a constrained optimization problem, we can no longer solve it by setting the derivative of the loss function to zero. Instead, we will solve it by computing the singular value decomposition of A as shown in equation \ref{eqn:SVD}.
+
+\begin{flalign}
+\matr{A} &= 
+\underset{m \times n}{
+    \begin{bmatrix}
+        x_{11} & x_{12} & \dots & x_{1n} \\
+        x_{21} & x_{22} & \dots & x_{2n} \\
+        \vdots & \vdots & \ddots & \vdots \\
+        x_{m1} & x_{n2} & \dots & x_{mn}
+    \end{bmatrix}
+} \nonumber \\
+&= \matr{U} \matr{\Sigma} \transpose{\matr{V}} \label{eqn:SVD} \\
+\text{where} \nonumber \\
+\matr{U} &= \underset{m \times m}{
+    \begin{bmatrix}
+        | & | & \ & | \\
+        \vecr{u}_{1} & \vecr{u}_{2} & \dots & \vecr{u}_{m} \\
+        | & | & \ & |
+    \end{bmatrix}
+} & \longeqncomment{\mathmatr{U} is orthonormal}{$\vecr{u}_{i}$ are the left singular vectors of \mathmatr{A}} \nonumber \\
+\matr{\Sigma} &=
+\underset{m \times n}{
+\begin{bmatrix}
+\sigma_{1} & 0 & \dots & 0 \\
+0 & \sigma_{2} & \dots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \dots & \sigma_{n} \\
+0 & 0 & \vdots & 0 \\
+\end{bmatrix}} & \eqncomment{$\sigma_{i}$ are called the singular values of \mathmatr{A}}\nonumber \\
+\transpose{\matr{V}} &=
+\underset{n \times n}{
+    \begin{bmatrix}
+        \rule[.5ex]{3.5em}{0.4pt} \transpose{\vecr{v}_{1}} \rule[.5ex]{3.5em}{0.4pt} \\
+        \rule[.5ex]{3.5em}{0.4pt} \transpose{\vecr{v}_{2}} \rule[.5ex]{3.5em}{0.4pt} \\
+        \vdots \\
+        \rule[.5ex]{3.5em}{0.4pt} \transpose{\vecr{v}_{n}} \rule[.5ex]{3.5em}{0.4pt} \\
+    \end{bmatrix}
+} & \longeqncomment{\mathmatr{V} is orthonormal}{$\vecr{v}_{i}$ are the right singular vectors of \mathmatr{A}} \nonumber
+\end{flalign}
+
+The solution to our constrained least squares minimization problem is given by the column of \mathmatr{V} corresponding to the smallest singular value of \mathmatr{\Sigma}. Note, our constraint $\vecr{x}:\norm{\vecr{x}}^2 = 1$ is satisfied because \mathmatr{V} is orthonormal.
+
+\subsection{Imposing Rank Constraints}
+Suppose we are given \mathmatr{F} of shape $(m \times n)$ and an integer $r < \min(m, n)$, and our objective is to find a matrix \mathmatr{F'} of rank $r$ that is closest to \mathmatr{F} from a least squares perspective. We can write the optimization problem as shown in equation \ref{eqn:enforcing rank constraints optimization problem}.
+
+\begin{flalign}
+\underset{\matr{F'}: \rank{(\matr{F'})} = r}{\min} \norm{\matr{F} \matr{F'}}^2 \label{eqn:enforcing rank constraints optimization problem}
+\end{flalign}
+
+We can find \mathmatr{F'} using equation \ref{eqn:solution for F'} as follows:
+
+\begin{flalign}
+\matr{F} &= \matr{U} \matr{\Sigma} \transpose{\matr{V}} & \eqncomment{Compute $\svd{(\matr{F})}$}\nonumber \\
+\matr{\Sigma'} &= \text{top}(\matr{\Sigma}, r) & \longeqncomment{Keep only the top $r$ singular values in $\matr{\Sigma}$}{Set remaining singular values as zero} \nonumber \\
+\matr{F'} &= \matr{U} \matr{\Sigma'} \transpose{\matr{V}} \label{eqn:solution for F'}
+\end{flalign}
+
+\section{Non-linear Least Squares}
+Given a non-linear function $\vecr{f(x)}$ where $f \colon \mathbb{R}^{n} \to \mathbb{R}^{m}$ and a column vector \mathvecr{b} of size $(m \times 1)$, our objective is to find \mathvecr{x} that minimizes $\norm{\vecr{f(x)} - \vecr{b}}^2$. As $\vecr{f(x)}$ is a non-linear function, we do not have an analytical single shot solution. Instead, we will be applying an iterative gradient descent algorithm to arrive at our solution.
+
+\begin{flalign}
+\underset{\vecr{x}}{\min} \norm{\vecr{f(x)} - \vecr{b}}^2 &= \underset{\vecr{x}}{\min}\ \transpose{(\vecr{f(x)} - \vecr{b})}(\vecr{f(x)} - \vecr{b}) \nonumber \\
+&= \underset{\vecr{x}}{\min}\ \transpose{\vecr{f(x)}}\vecr{f(x)} -2\transpose{\vecr{b}}\vecr{f(x)} + \transpose{\vecr{b}}\vecr{b} \nonumber \\
+&= \underset{\vecr{x}}{\min}\ \transpose{\vecr{f(x)}}\vecr{f(x)} -2\transpose{\vecr{b}}\vecr{f(x)} & \eqncomment{$\transpose{\vecr{b}}\vecr{b}$ is independent of \mathvecr{x}} \nonumber
+\end{flalign}
+
+Suppose we start our gradient descent process with a guess for \mathvecr{x} say $\vecr{x}_0$. Our objective will be to iteratively move in the opposite direction of the maximum gradient such that $\vecr{f(x_{i+1})} < \vecr{f(x_i)}$. We continue iterating until a stopping criteria is reached. Let our loss function be $L = \transpose{\vecr{f(x)}}\vecr{f(x)} -2\transpose{\vecr{b}}\vecr{f(x)}$. Let us now compute the partial derivative of $L$ with respect to \mathvecr{x}. 
+\begin{flalign}
+L &= \transpose{\vecr{f(x)}}\vecr{f(x)} -2\transpose{\vecr{b}}\vecr{f(x)} & \nonumber \\
+\frac{\partial L}{\partial \vecr{x}} &= 2\transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}}\vecr{f(x)} - \transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}}\vecr{b} \\[1em]
+\text{where} \nonumber \\
+\frac{\partial \vecr{f(x)}}{\partial \vecr{x}} &=
+\begin{bmatrix}
+\frac{\partial f_{1}}{\partial x_{1}} & \dots & \frac{\partial f_{1}}{\partial x_{n}} \\ 
+\vdots & \ddots & \vdots \\
+\frac{\partial f_{m}}{\partial x_{1}} & \dots & \frac{\partial f_{m}}{\partial x_{n}}
+\end{bmatrix} & \eqncomment{Jacobian matrix in numerator layout \cite{wiki:Matrix_calculus}} \nonumber
+\nonumber
+\end{flalign}
+
+At a minima or maxima, the partial derivative of L with respect to x will be zero.
+\begin{flalign}
+\frac{\partial L}{\partial \vecr{x}}\at[\bigg]{\vecr{x}^*} &= 2\transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}}\vecr{f(x)} - \transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}}\vecr{b} = 0 \label{eqn:derivative of non-linear least squares loss function}. 
+\end{flalign}
+
+If we approximate \mathvecr{f(x)} at \mathvecr{x_i} as a linear function \cite{wiki:Taylor's_theorem}, we get:
+\begin{flalign}
+\vecr{f(x_i+ \Delta \vecr{x})} \approx \vecr{f(x_i)} + \frac{\partial \vecr{f(x)}}{\partial \vecr{x}}\at[\bigg]{\vecr{x}=\vecr{x_i}} \Delta \vecr{x} \label{eqn:linear approximation}
+\end{flalign}
+
+Plugging equation \ref{eqn:linear approximation} into equation \ref{eqn:derivative of non-linear least squares loss function} \cite{cis580slides}, we get:
+\begin{flalign}
+& 2\transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}}(\vecr{f(x) + \frac{\partial \vecr{f(x)}}{\partial \vecr{x}}\Delta \vecr{x}}) - 2\transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}}\vecr{b} = \vecr{0} \nonumber \\[1em]
+\implies & \transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}} \vecr{f(x)} + \transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}}\frac{\partial \vecr{f(x)}}{\partial \vecr{x}} \Delta \vecr{x} - \transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}} \vecr{b} = \vecr{0} \nonumber \\[1em]
+\implies & \transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}}\frac{\partial \vecr{f(x)}}{\partial \vecr{x}} \Delta \vecr{x} = \transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}} \vecr{b} - \transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}}\vecr{f(x)} \nonumber \\[1em]
+\implies & \transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}}\frac{\partial \vecr{f(x)}}{\partial \vecr{x}} \Delta \vecr{x} = \transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}}(\vecr{b} - \vecr{f(x)}) \nonumber \\[1em]
+\implies & \Delta \vecr{x} = (\transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}}\frac{\partial \vecr{f(x)}}{\partial \vecr{x}})^{-1}\transpose{\frac{\partial \vecr{f(x)}}{\partial \vecr{x}}}(\vecr{b} - \vecr{f(x)}) \label{eqn:non-linear least squares step size}
+\end{flalign}
+
+Thus, using equation \ref{eqn:non-linear least squares step size}, given $\vecr{x}_i$ at iteration $i$, we can compute $\vecr{x}_{i+1}=\vecr{x}_i + \Delta \vecr{x}$. By the way, notice, similarity of equation \ref{eqn:non-linear least squares step size} to the solution for heterogeneous linear system in equation \ref{eqn:heterogeneous linear system solution}.
+% References
+\newpage
+\bibliographystyle{unsrt}
+\bibliography{references}
+\end{document}
