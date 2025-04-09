@@ -305,12 +305,12 @@ By the definition of cross product, $p' \times b$ is perpendicular to $p'$. Ther
 \end{equation}
 Looking at this constraint, it should remind you of the general definition of the Fundamental matrix $p'^T Fp = 0$. If we set $F=[b]_\times A$, then extracting $A$ and $b$ simply breaks down to a decomposition problem. 
 
-Let us begin by determining $b$. Again, by the definition of cross product, we can simply write $Fb$ as 
+Let us begin by determining $b$. Again, using the definition of cross product, we can write, 
 \begin{equation}
-    Fb = [b]_\times A b = (b\times A)b = 0
+    F^{\top}b = [[b]_\times A]^{\top} b = 0
     \label{eq:cross_b}
 \end{equation}.  
-Since $F$ is singular, $b$ can be computed as a least square solution of $F b = 0$, with $\|b\|=1$, using SVD. 
+Since $F$ is singular, $b$ can be computed as a least square solution of $F^{\top} b = 0$, with $\|b\|=1$, using SVD. 
 
 Once $b$ is known, we can now compute $A$. If we set $A=-[b]_\times F$, then we can verify that this definition satisfies $F = [b]_\times A$:
 \begin{equation}
